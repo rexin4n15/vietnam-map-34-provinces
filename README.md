@@ -1,5 +1,7 @@
 # Vietnam Map - 34 Provinces
 
+![Vietnam Map 34 Provinces](banner.jpeg)
+
 [![npm version](https://img.shields.io/npm/v/@xdev-asia/vietnam-map-34-provinces.svg)](https://www.npmjs.com/package/@xdev-asia/vietnam-map-34-provinces)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Demo](https://img.shields.io/badge/Demo-Live-green.svg)](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/)
