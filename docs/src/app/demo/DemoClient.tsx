@@ -28,6 +28,16 @@ export default function DemoPage() {
     const [useCustomTooltip, setUseCustomTooltip] = useState(false);
     const [tooltipTemplate, setTooltipTemplate] = useState(DEFAULT_TOOLTIP);
 
+    // Color schemes for the map
+    const colorSchemes = [
+        { name: 'Blue', minColor: '#1e293b', maxColor: '#0ea5e9' },
+        { name: 'Green', minColor: '#14532d', maxColor: '#22c55e' },
+        { name: 'Purple', minColor: '#3b0764', maxColor: '#a855f7' },
+        { name: 'Red', minColor: '#450a0a', maxColor: '#ef4444' },
+        { name: 'Teal', minColor: '#134e4a', maxColor: '#14b8a6' },
+    ];
+    const [colorSchemeIndex, setColorSchemeIndex] = useState(0);
+
     const handleProvinceClick = useCallback((province: any) => {
         setSelected(province);
         if (detailsRef.current) {
@@ -77,8 +87,8 @@ export default function DemoPage() {
                             tooltipFormatter={tooltipFormatter}
                             onProvinceClick={handleProvinceClick}
                             colorAxis={{
-                                minColor: "#1e293b",
-                                maxColor: "#0ea5e9",
+                                minColor: colorSchemes[colorSchemeIndex].minColor,
+                                maxColor: colorSchemes[colorSchemeIndex].maxColor,
                             }}
                         />
 
@@ -184,6 +194,22 @@ export default function DemoPage() {
                                     </div>
                                 </div>
 
+                                {/* Map Color Scheme */}
+                                <div className="space-y-2">
+                                    <span className="text-sm text-slate-300">Bảng màu bản đồ</span>
+                                    <div className="flex gap-2">
+                                        {colorSchemes.map((scheme, index) => (
+                                            <button
+                                                key={scheme.name}
+                                                onClick={() => setColorSchemeIndex(index)}
+                                                className={`flex-1 h-8 rounded-lg border-2 transition-all ${colorSchemeIndex === index ? 'border-white scale-105' : 'border-transparent'}`}
+                                                style={{ background: `linear-gradient(to right, ${scheme.minColor}, ${scheme.maxColor})` }}
+                                                title={scheme.name}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+
                                 {/* Height Slider */}
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-sm">
@@ -246,7 +272,12 @@ export default function DemoPage() {
   height={${mapHeight}}
   showLabels={${showLabels}}
   showZoomControls={${showZoomControls}}
-  hoverColor="${hoverColor}"${useCustomTooltip ? `
+  enableDrilldown={${enableDrilldown}}
+  hoverColor="${hoverColor}"
+  colorAxis={{
+    minColor: "${colorSchemes[colorSchemeIndex].minColor}",
+    maxColor: "${colorSchemes[colorSchemeIndex].maxColor}"
+  }}${useCustomTooltip ? `
   tooltipFormatter={(point) => \`
     ${tooltipTemplate.replace(/\n/g, '\n    ').replace(/{/g, '${point.').replace(/}/g, '}')}\`}` : ''}
   onProvinceClick={(p) => console.log(p)}

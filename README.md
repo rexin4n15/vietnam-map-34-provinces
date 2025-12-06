@@ -43,9 +43,47 @@ const map = createVietnamMap('#container', {
 import { VietnamMap } from '@xdev-asia/vietnam-map-34-provinces/react';
 
 function App() {
-  return <VietnamMap />;
+  return (
+    <VietnamMap
+      height={600}
+      showLabels={true}
+      showZoomControls={true}
+      enableDrilldown={true}
+      hoverColor="#fbbf24"
+      colorAxis={{
+        minColor: "#1e293b",
+        maxColor: "#0ea5e9"
+      }}
+      tooltipFormatter={(point) => `
+        <div style="padding: 8px;">
+          <b>${point.name}</b><br/>
+          Value: ${point.value}
+        </div>
+      `}
+      onProvinceClick={(province) => {
+        console.log('Clicked:', province.name);
+      }}
+    />
+  );
 }
 ```
+
+#### React Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `height` | `number \| string` | `600` | Chiều cao bản đồ |
+| `showLabels` | `boolean` | `true` | Hiển thị tên tỉnh |
+| `showZoomControls` | `boolean` | `true` | Hiển thị nút zoom (+/-) |
+| `enableDrilldown` | `boolean` | `true` | Cho phép click để xem cấp xã |
+| `hoverColor` | `string` | `#fbbf24` | Màu khi hover |
+| `borderColor` | `string` | `#ffffff` | Màu viền tỉnh |
+| `colorAxis` | `object` | - | Cấu hình gradient màu |
+| `tooltipFormatter` | `(point) => string` | - | Custom HTML tooltip |
+| `onProvinceClick` | `(province) => void` | - | Callback khi click tỉnh |
+| `data` | `array` | - | Dữ liệu tùy chỉnh |
+| `className` | `string` | - | CSS class cho container |
+| `options` | `Highcharts.Options` | - | Override Highcharts config |
 
 ## 🛠️ Core API
 
