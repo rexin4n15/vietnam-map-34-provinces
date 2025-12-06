@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/xdev-asia-labs/vietnam-map-34-provinces/compare/v1.1.0...v1.1.1) (2025-12-06)
+
+
+### Bug Fixes
+
+* improve dependency installation process in release workflow ([4c62f73](https://github.com/xdev-asia-labs/vietnam-map-34-provinces/commit/4c62f730e38b7cd61359600531104b0d908d6af0))
+
 # [1.1.0](https://github.com/xdev-asia-labs/vietnam-map-34-provinces/compare/v1.0.1...v1.1.0) (2025-12-06)
 
 
