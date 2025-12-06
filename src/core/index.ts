@@ -1,5 +1,7 @@
 /**
  * Core module - Framework-agnostic utilities
+ * Data source: QĐ 19/2025/QĐ-TTg (hiệu lực từ 01/07/2025)
+ * 
  * Use này với bất kỳ JS framework nào (vanilla, React, Vue, Angular, etc.)
  */
 
@@ -7,12 +9,16 @@
 export {
     NEW_34_PROVINCES,
     OLD_TO_NEW_PROVINCE_MAP,
+    TMS_CODE_TO_PROVINCE,
     PROVINCE_MAPPING,
     normalizeName,
     getNewProvinceName,
     getProvinceByName,
     getProvinceByCode,
-    isMergedProvince
+    getProvinceByTmsCode,
+    isMergedProvince,
+    getTotalCommunes,
+    getProvinceStats as getProvinceStatsFromMapping
 } from './provinceMapping';
 
 export type { Province, Commune } from './provinceMapping';
@@ -26,12 +32,20 @@ export const vietnamGeoJson = vnMapData;
 export {
     getProvincesIndex,
     getProvinceInfo,
-    loadProvinceCommunes,
-    getProvinceStats
+    getProvinceCommunes,
+    getProvinceData,
+    getAllProvincesData,
+    getProvinceByBNVCode,
+    getProvinceByTMSCode,
+    searchCommunes,
+    getProvinceStats,
+    loadProvinceCommunes  // deprecated but kept for compatibility
 } from './drilldown';
 
 export type {
     ProvinceIndex,
+    ProvinceData,
+    CommuneData,
     CommuneFeature,
     ProvinceGeoJSON
 } from './drilldown';

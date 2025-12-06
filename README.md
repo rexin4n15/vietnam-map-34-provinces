@@ -4,21 +4,25 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Demo](https://img.shields.io/badge/Demo-Live-green.svg)](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/)
 
-React/Vanilla JS component hiển thị bản đồ Việt Nam với **34 tỉnh/thành phố mới** theo **Nghị quyết 60-NQ/TW** (hiệu lực 01/07/2025).
+Interactive map component hiển thị bản đồ Việt Nam với **34 tỉnh/thành phố** và **3,321 xã/phường** theo cấu trúc hành chính mới (QĐ 19/2025/QĐ-TTg, hiệu lực 01/07/2025).
 
-**🔗 [Live Demo](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/)**
+**🔗 [Live Demo](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/)** | **📖 [Documentation](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/docs/vanilla.html)**
+
+## ✨ Highlights
+
+- 🗺️ **34 tỉnh/TP mới** (6 TP trực thuộc TW + 28 tỉnh)
+- 📍 **3,321 xã/phường** với mã BNV + TMS chính thức
+- 🔄 **2 cấp hành chính**: Tỉnh → Xã (bỏ cấp Huyện)
+- 🎯 **Framework-agnostic**: Vanilla JS, React, Vue, Angular
+- 📦 **TypeScript** full support
 
 ## 📦 Installation
 
 ```bash
 npm install @xdev-asia/vietnam-map-34-provinces highcharts
-# or
-yarn add @xdev-asia/vietnam-map-34-provinces highcharts
-# or
-pnpm add @xdev-asia/vietnam-map-34-provinces highcharts
 ```
 
-## 🚀 Usage
+## 🚀 Quick Start
 
 ### Vanilla JavaScript
 
@@ -26,63 +30,9 @@ pnpm add @xdev-asia/vietnam-map-34-provinces highcharts
 import { createVietnamMap } from '@xdev-asia/vietnam-map-34-provinces/vanilla';
 
 const map = createVietnamMap('#container', {
-  // === DRILLDOWN (click vào tỉnh để xem xã/phường) ===
-  drilldown: {
-    enabled: true,
-    onDrilldown: (province) => console.log('Viewing:', province.name),
-    onDrillup: () => console.log('Back to country'),
-    onLoading: (loading) => showSpinner(loading)
-  },
-  
-  // === CALLBACKS ===
-  onProvinceClick: (province) => console.log('Clicked:', province),
-  onProvinceHover: (province) => updateTooltip(province),
-  onCommuneClick: (commune) => console.log('Commune:', commune),
-  onReady: (instance) => console.log('Map ready!'),
-  
-  // === APPEARANCE ===
   height: 600,
-  backgroundColor: 'transparent',
-  colors: {
-    min: '#E1F5FE',
-    max: '#01579B',
-    stops: [[0, '#E1F5FE'], [0.5, '#4FC3F7'], [1, '#01579B']]
-  },
-  style: {
-    borderColor: '#ffffff',
-    borderWidth: 0.5,
-    hoverColor: '#fbbf24',
-    hoverBorderColor: '#d97706'
-  },
-  dataLabels: {
-    enabled: true,
-    fontSize: '10px',
-    color: '#1e293b'
-  },
-  tooltip: {
-    enabled: true,
-    backgroundColor: 'rgba(255,255,255,0.95)',
-    formatter: (point) => `<b>${point.name}</b>: ${point.value}`
-  },
-  
-  // === DATA ===
-  data: [
-    { 'hc-key': 'vn-new-ha-noi', value: 5000, customField: 'abc' },
-    { 'hc-key': 'vn-new-ho-chi-minh', value: 8000 }
-  ],
-  
-  // === NAVIGATION ===
-  navigation: true,
-  doubleClickZoom: true
+  onProvinceClick: (province) => console.log('Clicked:', province.name)
 });
-
-// Methods
-map.zoomToProvince('vn-new-ha-noi');
-map.resetZoom();
-map.updateData([...]);
-map.drilldownTo('Hà Nội');
-map.drillUp();
-map.destroy();
 ```
 
 ### React
@@ -91,173 +41,122 @@ map.destroy();
 import { VietnamMap } from '@xdev-asia/vietnam-map-34-provinces/react';
 
 function App() {
-  return (
-    <div style={{ height: '600px' }}>
-      <VietnamMap />
-    </div>
-  );
+  return <VietnamMap />;
 }
 ```
 
-> **Note:** React version requires additional peer dependencies: `react`, `react-dom`, `highcharts-react-official`, `antd`
+## 🛠️ Core API
 
-### Vue 3
-
-```vue
-<template>
-  <div ref="mapContainer" style="height: 600px"></div>
-</template>
-
-<script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-import { createVietnamMap } from '@xdev-asia/vietnam-map-34-provinces/vanilla';
-
-const mapContainer = ref(null);
-let mapInstance = null;
-
-onMounted(() => {
-  mapInstance = createVietnamMap(mapContainer.value, {
-    onProvinceClick: (province) => {
-      console.log('Clicked:', province.name);
-    }
-  });
-});
-
-onUnmounted(() => {
-  mapInstance?.destroy();
-});
-</script>
-```
-
-### Angular
-
-```typescript
-import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
-import { createVietnamMap, VietnamMapInstance } from '@xdev-asia/vietnam-map-34-provinces/vanilla';
-
-@Component({
-  selector: 'app-vietnam-map',
-  template: '<div #mapContainer style="height: 600px"></div>'
-})
-export class VietnamMapComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('mapContainer') mapContainer!: ElementRef;
-  private mapInstance: VietnamMapInstance | null = null;
-
-  ngAfterViewInit() {
-    this.mapInstance = createVietnamMap(this.mapContainer.nativeElement, {
-      onProvinceClick: (province) => console.log('Clicked:', province.name)
-    });
-  }
-
-  ngOnDestroy() {
-    this.mapInstance?.destroy();
-  }
-}
-```
-
-### CDN (Browser)
-
-```html
-<script src="https://code.highcharts.com/maps/highmaps.js"></script>
-<script src="https://unpkg.com/@xdev-asia/vietnam-map-34-provinces/dist/index.umd.js"></script>
-
-<div id="map" style="height: 600px"></div>
-
-<script>
-  const map = VietnamMap.createVietnamMap('#map');
-</script>
-```
-
-## 🛠️ Core Utilities
-
-Dùng được với bất kỳ JavaScript framework nào:
+Tra cứu dữ liệu tỉnh/xã với bất kỳ framework nào:
 
 ```javascript
 import { 
-  getNewProvinceName, 
-  getProvinceByName,
+  // Province utilities
   NEW_34_PROVINCES,
-  vietnamGeoJson 
+  getProvinceByName,
+  getNewProvinceName,
+  getProvinceByCode,
+  
+  // Commune utilities  
+  getProvinceCommunes,
+  getProvinceData,
+  searchCommunes,
+  getProvinceStats,
+  
+  // Lookup tables
+  OLD_TO_NEW_PROVINCE_MAP,
+  TMS_CODE_TO_PROVINCE
 } from '@xdev-asia/vietnam-map-34-provinces/core';
 
+// Get all communes in a province
+const communes = getProvinceCommunes('Hà Nội');
+console.log(communes.length); // 126
+
+// Search communes by name
+const results = searchCommunes('Ba Đình');
+// [{ province: 'Hà Nội', commune: { code: 10101003, name: 'Phường Ba Đình' } }]
+
+// Get province by TMS code (for tax systems)
+const province = getProvinceByTMSCode(101); // Hà Nội
+
 // Convert old province name to new
-const newName = getNewProvinceName('Hà Giang'); // => "Tuyên Quang"
+getNewProvinceName('Hà Giang'); // → "Tuyên Quang"
+getNewProvinceName('Bình Dương'); // → "Hồ Chí Minh"
 
-// Get full province info
-const province = getProvinceByName('Phú Thọ');
-console.log(province);
+// Statistics
+console.log(getProvinceStats());
 // {
-//   code: 15,
-//   name: "Phú Thọ",
-//   merged_from: [
-//     { name: "Vĩnh Phúc", code: 26 },
-//     { name: "Phú Thọ", code: 25 },
-//     { name: "Hòa Bình", code: 17 }
-//   ],
-//   ...
+//   totalProvinces: 34,
+//   totalCommunes: 3321,
+//   cities: 6,
+//   provinces: 28,
+//   largestProvince: { name: 'Hồ Chí Minh', commune_count: 168 },
+//   smallestProvince: { name: 'Lai Châu', commune_count: 38 }
 // }
-
-// Access GeoJSON data directly
-console.log(vietnamGeoJson.features.length); // 63 (original provinces)
 ```
 
-## 🗺️ Features
+## 📊 34 Tỉnh/Thành Phố
 
-- ✅ **34 tỉnh mới** theo Nghị quyết 60-NQ/TW
-- ✅ **Framework-agnostic** - Vanilla JS, React, Vue, Angular
-- ✅ **Interactive map** với zoom, click, hover
-- ✅ **Merged provinces** - Tự động gộp các tỉnh cũ thành tỉnh mới
-- ✅ **TypeScript** full support
-- ✅ **CDN support** for browser usage
-- ✅ **Tree-shakeable** - Only import what you need
+### 6 Thành phố trực thuộc Trung ương
 
-## 📊 Province Mapping
+| # | Tên | Xã/Phường | Hợp nhất từ |
+|---|-----|-----------|-------------|
+| 1 | Hà Nội | 126 | Hà Nội + Hà Tây |
+| 4 | Hải Phòng | 114 | Hải Phòng + Hải Dương |
+| 20 | Huế | 40 | Thừa Thiên Huế |
+| 21 | Đà Nẵng | 94 | Đà Nẵng + Quảng Nam |
+| 29 | Hồ Chí Minh | 168 | HCM + Bình Dương + Bà Rịa-VT |
+| 33 | Cần Thơ | 103 | Cần Thơ + Hậu Giang + Sóc Trăng |
 
-### 23 đơn vị hợp nhất:
+### 28 Tỉnh
 
-| # | Tỉnh mới | Hợp nhất từ |
-|---|----------|-------------|
-| 1 | Tuyên Quang | Tuyên Quang + Hà Giang |
-| 2 | Lào Cai | Lào Cai + Yên Bái |
-| 3 | Thái Nguyên | Bắc Kạn + Thái Nguyên |
-| 4 | Phú Thọ | Vĩnh Phúc + Phú Thọ + Hòa Bình |
-| 5 | Bắc Ninh | Bắc Ninh + Bắc Giang |
-| 6 | Hưng Yên | Hưng Yên + Thái Bình |
-| 7 | Hải Phòng | Hải Dương + Hải Phòng |
-| 8 | Ninh Bình | Hà Nam + Ninh Bình + Nam Định |
-| 9 | Quảng Trị | Quảng Bình + Quảng Trị |
-| 10 | Đà Nẵng | Quảng Nam + Đà Nẵng |
-| 11 | Quảng Ngãi | Kon Tum + Quảng Ngãi |
-| 12 | Gia Lai | Gia Lai + Bình Định |
-| 13 | Khánh Hòa | Ninh Thuận + Khánh Hòa |
-| 14 | Lâm Đồng | Lâm Đồng + Đắk Nông + Bình Thuận |
-| 15 | Đắk Lắk | Đắk Lắk + Phú Yên |
-| 16 | Hồ Chí Minh | Bà Rịa-Vũng Tàu + Bình Dương + TP.HCM |
-| 17 | Đồng Nai | Đồng Nai + Bình Phước |
-| 18 | Tây Ninh | Tây Ninh + Long An |
-| 19 | Cần Thơ | Cần Thơ + Sóc Trăng + Hậu Giang |
-| 20 | Vĩnh Long | Bến Tre + Vĩnh Long + Trà Vinh |
-| 21 | Đồng Tháp | Tiền Giang + Đồng Tháp |
-| 22 | Cà Mau | Bạc Liêu + Cà Mau |
-| 23 | An Giang | An Giang + Kiên Giang |
+| # | Tên | Xã | Hợp nhất từ |
+|---|-----|-----|-------------|
+| 2 | Bắc Ninh | 99 | Bắc Ninh + Bắc Giang |
+| 3 | Quảng Ninh | 54 | - |
+| 5 | Hưng Yên | 104 | Hưng Yên + Thái Bình |
+| 6 | Ninh Bình | 129 | Ninh Bình + Nam Định + Hà Nam |
+| 7 | Cao Bằng | 56 | - |
+| 8 | Tuyên Quang | 124 | Tuyên Quang + Hà Giang |
+| 9 | Lào Cai | 99 | Lào Cai + Yên Bái |
+| 10 | Thái Nguyên | 92 | Thái Nguyên + Bắc Kạn |
+| 11 | Lạng Sơn | 65 | - |
+| 12 | Phú Thọ | 148 | Phú Thọ + Vĩnh Phúc + Hòa Bình |
+| 13 | Điện Biên | 45 | - |
+| 14 | Lai Châu | 38 | - |
+| 15 | Sơn La | 75 | - |
+| 16 | Thanh Hóa | 166 | - |
+| 17 | Nghệ An | 130 | - |
+| 18 | Hà Tĩnh | 69 | - |
+| 19 | Quảng Trị | 78 | Quảng Trị + Quảng Bình |
+| 22 | Quảng Ngãi | 96 | Quảng Ngãi + Kon Tum |
+| 23 | Khánh Hòa | 65 | Khánh Hòa + Ninh Thuận |
+| 24 | Gia Lai | 135 | Gia Lai + Bình Định |
+| 25 | Đắk Lắk | 102 | Đắk Lắk + Phú Yên |
+| 26 | Lâm Đồng | 124 | Lâm Đồng + Đắk Nông + Bình Thuận |
+| 27 | Tây Ninh | 96 | Tây Ninh + Long An |
+| 28 | Đồng Nai | 95 | Đồng Nai + Bình Phước |
+| 30 | Vĩnh Long | 124 | Vĩnh Long + Bến Tre + Trà Vinh |
+| 31 | Đồng Tháp | 102 | Đồng Tháp + Tiền Giang |
+| 32 | An Giang | 102 | An Giang + Kiên Giang |
+| 34 | Cà Mau | 64 | Cà Mau + Bạc Liêu |
 
-### 11 đơn vị giữ nguyên:
+## 📖 Documentation
 
-Hà Nội, Huế, Lai Châu, Điện Biên, Sơn La, Lạng Sơn, Quảng Ninh, Thanh Hóa, Nghệ An, Hà Tĩnh, Cao Bằng
+- [Vanilla JS Guide](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/docs/vanilla.html)
+- [React Guide](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/docs/reactjs.html)
+- [Vue 3 Guide](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/docs/vuejs.html)
+- [Angular Guide](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/docs/angular.html)
 
 ## 📝 License
 
 MIT
 
-## 📖 References
+## 📚 Data Sources
 
-- [Nghị quyết 60-NQ/TW - Trung ương Đảng khóa XIII](https://tulieuvankien.dangcongsan.vn/he-thong-van-ban/van-ban-cua-dang/nghi-quyet-so-60-nqtw-ngay-28112024-cua-bo-chinh-tri-ve-sap-xep-don-vi-hanh-chinh-cap-huyen-cap-xa-giai-doan-2026---2030-9797)
-- [GADM Vietnam Administrative Boundaries](https://gadm.org/download_country.html)
+- [QĐ 19/2025/QĐ-TTg](https://chinhphu.vn) - Bảng danh mục mã số ĐVHC
+- [phucanhle/vn-xaphuong-2025](https://github.com/phucanhle/vn-xaphuong-2025) - JSON data
 - [Highcharts Maps](https://www.highcharts.com/docs/maps/getting-started)
-
-## 🤝 Contributing
-
-Contributions are welcome! Please open an issue or PR.
 
 ---
 
