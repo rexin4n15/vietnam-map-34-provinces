@@ -111,10 +111,197 @@ function InteractiveMap() {
             </div>
           </section>
 
+          {/* Custom Data */}
+          <section id="custom-data" className="scroll-mt-24">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
+              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-sky-500/10 text-sky-400 text-sm font-mono">04</span>
+              Custom Data & Tooltip
+            </h2>
+            <div className="space-y-6">
+              <div className="p-6 bg-slate-900/50 border border-white/10 rounded-xl backdrop-blur-sm">
+                <h3 className="text-lg font-semibold text-white mb-4">Hiển thị dữ liệu riêng cho từng tỉnh</h3>
+                <p className="text-slate-400 mb-4">
+                  Truyền data với bất kỳ fields nào bạn muốn. Tất cả custom fields sẽ được pass vào tooltipFormatter và onProvinceClick.
+                </p>
+                <CodeBlock
+                  language="tsx"
+                  code={`function CustomDataMap() {
+  const provinceData = [
+    {
+      name: 'Hà Nội',
+      value: 8500000,
+      population: 8500000,
+      area: 3344,
+      gdp: 150000,
+      hospitals: 120,
+      universities: 85
+    },
+    {
+      name: 'Hồ Chí Minh',
+      value: 9000000,
+      population: 9000000,
+      area: 9650,
+      gdp: 280000,
+      hospitals: 200,
+      universities: 95
+    }
+    // ... các tỉnh khác
+  ];
+
+  return (
+    <VietnamMap
+      data={provinceData}
+      tooltipFormatter={(point) => \`
+        <div style="padding: 12px; min-width: 220px;">
+          <div style="font-weight: bold; font-size: 16px; margin-bottom: 8px;">
+            📍 \${point.name}
+          </div>
+          <table style="width: 100%; font-size: 12px;">
+            <tr>
+              <td>Dân số:</td>
+              <td style="text-align: right;"><b>\${point.population?.toLocaleString()}</b></td>
+            </tr>
+            <tr>
+              <td>Diện tích:</td>
+              <td style="text-align: right;"><b>\${point.area} km²</b></td>
+            </tr>
+            <tr>
+              <td>GDP:</td>
+              <td style="text-align: right;"><b>\${point.gdp?.toLocaleString()} tỷ</b></td>
+            </tr>
+            <tr>
+              <td>Bệnh viện:</td>
+              <td style="text-align: right;"><b>\${point.hospitals}</b></td>
+            </tr>
+          </table>
+        </div>
+      \`}
+      onProvinceClick={(province) => {
+        console.log('Province data:', province);
+        // province chứa tất cả custom fields
+      }}
+    />
+  );
+}`}
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Load from API */}
+          <section id="api-data" className="scroll-mt-24">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
+              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-sky-500/10 text-sky-400 text-sm font-mono">05</span>
+              Load Data từ API
+            </h2>
+            <div className="space-y-6">
+              <div className="p-6 bg-slate-900/50 border border-white/10 rounded-xl backdrop-blur-sm">
+                <h3 className="text-lg font-semibold text-white mb-4">Fetch và transform data</h3>
+                <CodeBlock
+                  language="tsx"
+                  code={`import { useState, useEffect } from 'react';
+
+function APIDataMap() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch('/api/provinces/statistics');
+        const apiData = await res.json();
+        
+        // Transform data
+        const transformed = apiData.map(item => ({
+          name: item.province_name,
+          value: item.total_cases,
+          activeCases: item.active,
+          recovered: item.recovered,
+          vaccinationRate: item.vaccination_rate
+        }));
+        
+        setData(transformed);
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    fetchData();
+  }, []);
+
+  if (loading) return <div>Đang tải...</div>;
+
+  return (
+    <VietnamMap
+      data={data}
+      tooltipFormatter={(point) => \`
+        <div>
+          <b>\${point.name}</b><br/>
+          Tổng ca: \${point.value}<br/>
+          Đang điều trị: \${point.activeCases}<br/>
+          Đã khỏi: \${point.recovered}
+        </div>
+      \`}
+    />
+  );
+}`}
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* State Management */}
+          <section id="state-management" className="scroll-mt-24">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
+              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-sky-500/10 text-sky-400 text-sm font-mono">06</span>
+              State Management
+            </h2>
+            <div className="space-y-6">
+              <div className="p-6 bg-slate-900/50 border border-white/10 rounded-xl backdrop-blur-sm">
+                <h3 className="text-lg font-semibold text-white mb-4">Kết hợp với Redux/Zustand</h3>
+                <CodeBlock
+                  language="tsx"
+                  code={`// store/useMapStore.ts
+import { create } from 'zustand';
+
+export const useMapStore = create((set) => ({
+  selectedProvince: null,
+  data: [],
+  setSelectedProvince: (province) => set({ selectedProvince: province }),
+  setData: (data) => set({ data })
+}));
+
+// Component
+function MapWithStore() {
+  const { data, selectedProvince, setSelectedProvince } = useMapStore();
+
+  return (
+    <div className="grid grid-cols-2 gap-4">
+      <VietnamMap
+        data={data}
+        onProvinceClick={setSelectedProvince}
+      />
+      {selectedProvince && (
+        <div className="p-4 bg-white rounded shadow">
+          <h2 className="text-xl font-bold">{selectedProvince.name}</h2>
+          <p>Dân số: {selectedProvince.population?.toLocaleString()}</p>
+          <p>GDP: {selectedProvince.gdp?.toLocaleString()} tỷ</p>
+        </div>
+      )}
+    </div>
+  );
+}`}
+                />
+              </div>
+            </div>
+          </section>
+
           {/* Hooks & Utils */}
           <section id="hooks" className="scroll-mt-24">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
-              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-sky-500/10 text-sky-400 text-sm font-mono">04</span>
+              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-sky-500/10 text-sky-400 text-sm font-mono">07</span>
               Core Utilities
             </h2>
             <div className="grid gap-6">
@@ -128,19 +315,80 @@ function InteractiveMap() {
                   language="tsx"
                   code={`import { 
   getProvinceStats,
+  getProvinceCommunes,
   searchCommunes,
+  getNewProvinceName,
   NEW_34_PROVINCES 
 } from '@xdev-asia/vietnam-map-34-provinces/core';
 
-// 1. Lấy thống kê
+// 1. Lấy thống kê tổng quan
 const stats = getProvinceStats();
 console.log(\`Tổng số xã: \${stats.totalCommunes}\`);
+console.log(\`Tỉnh lớn nhất: \${stats.largestProvince.name}\`);
 
-// 2. Tìm kiếm xã phường
+// 2. Lấy danh sách xã/phường của tỉnh
+const communes = getProvinceCommunes('Hà Nội');
+console.log(\`Hà Nội có \${communes.length} xã/phường\`);
+
+// 3. Tìm kiếm xã phường
 const results = searchCommunes('Ba Đình');
+// [{ province: 'Hà Nội', commune: { code: 10101003, name: 'Phường Ba Đình' } }]
 
-// 3. Danh sách tất cả tỉnh thành
-const hcm = NEW_34_PROVINCES.find(p => p.code === '29'); // Mã TP.HCM Mới`}
+// 4. Convert tên tỉnh cũ sang mới
+const newName = getNewProvinceName('Hà Giang'); // → "Tuyên Quang"
+
+// 5. Danh sách tất cả tỉnh thành
+const hcm = NEW_34_PROVINCES.find(p => p.code === '29');`}
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* TypeScript */}
+          <section id="typescript" className="scroll-mt-24">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
+              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-sky-500/10 text-sky-400 text-sm font-mono">08</span>
+              TypeScript Support
+            </h2>
+            <div className="space-y-6">
+              <div className="p-6 bg-slate-900/50 border border-white/10 rounded-xl backdrop-blur-sm">
+                <h3 className="text-lg font-semibold text-white mb-4">Type-safe với custom data</h3>
+                <CodeBlock
+                  language="tsx"
+                  code={`import type { ProvinceData } from '@xdev-asia/vietnam-map-34-provinces/react';
+
+// Define custom interface
+interface HealthcareData extends ProvinceData {
+  name: string;
+  value: number;
+  hospitals: number;
+  doctors: number;
+  beds: number;
+}
+
+function TypedMap() {
+  const [data, setData] = useState<HealthcareData[]>([]);
+  
+  const handleClick = (province: HealthcareData) => {
+    // TypeScript biết province có field hospitals, doctors, beds
+    console.log(\`\${province.name} có \${province.hospitals} bệnh viện\`);
+  };
+  
+  return (
+    <VietnamMap
+      data={data}
+      onProvinceClick={handleClick}
+      tooltipFormatter={(point: HealthcareData) => \`
+        <div>
+          <b>\${point.name}</b><br/>
+          Bệnh viện: \${point.hospitals}<br/>
+          Bác sĩ: \${point.doctors}<br/>
+          Giường bệnh: \${point.beds}
+        </div>
+      \`}
+    />
+  );
+}`}
                 />
               </div>
             </div>
@@ -161,12 +409,18 @@ const hcm = NEW_34_PROVINCES.find(p => p.code === '29'); // Mã TP.HCM Mới`}
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {[
-                    { prop: "data", type: "array", def: "[]", desc: "Mảng dữ liệu khớp với 'hc-key'" },
+                    { prop: "data", type: "any[]", def: "-", desc: "Dữ liệu cho từng tỉnh với name, value và custom fields" },
                     { prop: "height", type: "number | string", def: "600", desc: "Chiều cao của container bản đồ" },
+                    { prop: "showLabels", type: "boolean", def: "true", desc: "Hiển thị tên tỉnh trên bản đồ" },
                     { prop: "showZoomControls", type: "boolean", def: "true", desc: "Hiển thị nút zoom +/-" },
-                    { prop: "onProvinceClick", type: "(p) => void", def: "-", desc: "Callback khi click vào tỉnh" },
-                    { prop: "colorAxis", type: "object", def: "-", desc: "Cấu hình dải màu Highcharts" },
-                    { prop: "options", type: "object", def: "-", desc: "Ghi đè cấu hình Highcharts gốc" },
+                    { prop: "enableDrilldown", type: "boolean", def: "true", desc: "Cho phép click để xem cấp xã/phường" },
+                    { prop: "tooltipFormatter", type: "(point) => string", def: "-", desc: "Custom tooltip, nhận point data return HTML" },
+                    { prop: "onProvinceClick", type: "(province) => void", def: "-", desc: "Callback khi click vào tỉnh" },
+                    { prop: "hoverColor", type: "string", def: "#fbbf24", desc: "Màu sắc khi hover" },
+                    { prop: "borderColor", type: "string", def: "#ffffff", desc: "Màu viền giữa các tỉnh" },
+                    { prop: "colorAxis", type: "ColorAxisOptions", def: "-", desc: "Cấu hình gradient màu (minColor, maxColor)" },
+                    { prop: "className", type: "string", def: "-", desc: "CSS class cho container wrapper" },
+                    { prop: "options", type: "Highcharts.Options", def: "-", desc: "Override toàn bộ config Highcharts" },
                   ].map((row, i) => (
                     <tr key={i} className="hover:bg-white/5 transition-colors">
                       <td className="py-4 px-6 font-mono text-sky-300">{row.prop}</td>
@@ -177,6 +431,192 @@ const hcm = NEW_34_PROVINCES.find(p => p.code === '29'); // Mã TP.HCM Mới`}
                   ))}
                 </tbody>
               </table>
+            </div>
+            <div className="mt-6 p-4 bg-sky-500/10 border border-sky-500/20 rounded-lg text-sm text-sky-200">
+              💡 <strong>Tip:</strong> Tất cả custom fields trong <code>data</code> sẽ được pass vào <code>tooltipFormatter</code> và <code>onProvinceClick</code>
+            </div>
+          </section>
+
+          {/* Best Practices */}
+          <section id="best-practices" className="scroll-mt-24">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
+              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-sky-500/10 text-sky-400 text-sm font-mono">09</span>
+              Best Practices
+            </h2>
+            <div className="space-y-6">
+              <div className="p-6 bg-slate-900/50 border border-white/10 rounded-xl backdrop-blur-sm">
+                <h3 className="text-lg font-semibold text-white mb-4">Performance Optimization</h3>
+                <CodeBlock
+                  language="tsx"
+                  code={`import { useMemo, useCallback } from 'react';
+
+function OptimizedMap({ rawData }) {
+  // Memoize transformed data
+  const mapData = useMemo(() => {
+    return rawData.map(item => ({
+      name: item.province_name,
+      value: item.total,
+      ...item
+    }));
+  }, [rawData]);
+  
+  // Memoize callbacks
+  const handleClick = useCallback((province) => {
+    console.log('Clicked:', province.name);
+  }, []);
+  
+  const tooltipFormatter = useMemo(() => {
+    return (point) => \`<div><b>\${point.name}</b>: \${point.value}</div>\`;
+  }, []);
+
+  return (
+    <VietnamMap
+      data={mapData}
+      onProvinceClick={handleClick}
+      tooltipFormatter={tooltipFormatter}
+    />
+  );
+}`}
+                />
+              </div>
+
+              <div className="p-6 bg-slate-900/50 border border-white/10 rounded-xl backdrop-blur-sm">
+                <h3 className="text-lg font-semibold text-white mb-4">Error Handling</h3>
+                <CodeBlock
+                  language="tsx"
+                  code={`function SafeMap({ data }) {
+  const [error, setError] = useState(null);
+  
+  // Validate data
+  const validatedData = useMemo(() => {
+    try {
+      if (!Array.isArray(data)) {
+        throw new Error('Data must be an array');
+      }
+      
+      return data.filter(item => {
+        if (!item.name || typeof item.value !== 'number') {
+          console.warn('Invalid item:', item);
+          return false;
+        }
+        return true;
+      });
+    } catch (err) {
+      setError(err.message);
+      return [];
+    }
+  }, [data]);
+
+  if (error) {
+    return <div className="text-red-500">Error: {error}</div>;
+  }
+
+  return <VietnamMap data={validatedData} />;
+}`}
+                />
+              </div>
+
+              <div className="p-6 bg-slate-900/50 border border-white/10 rounded-xl backdrop-blur-sm">
+                <h3 className="text-lg font-semibold text-white mb-4">Responsive Design</h3>
+                <CodeBlock
+                  language="tsx"
+                  code={`function ResponsiveMap() {
+  const [height, setHeight] = useState(600);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (window.innerWidth < 768) {
+        setHeight(400);
+      } else if (window.innerWidth < 1024) {
+        setHeight(500);
+      } else {
+        setHeight(600);
+      }
+    };
+
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
+
+  return (
+    <div className="w-full">
+      <VietnamMap
+        height={height}
+        showLabels={window.innerWidth >= 768}
+      />
+    </div>
+  );
+}`}
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Next.js Integration */}
+          <section id="nextjs" className="scroll-mt-24">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
+              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-sky-500/10 text-sky-400 text-sm font-mono">10</span>
+              Next.js Integration
+            </h2>
+            <div className="space-y-6">
+              <div className="p-6 bg-slate-900/50 border border-white/10 rounded-xl backdrop-blur-sm">
+                <h3 className="text-lg font-semibold text-white mb-4">Dynamic Import (SSR disabled)</h3>
+                <p className="text-slate-400 mb-4">
+                  Highcharts cần chạy client-side. Sử dụng dynamic import với ssr: false
+                </p>
+                <CodeBlock
+                  language="tsx"
+                  code={`// app/map/page.tsx
+'use client';
+
+import dynamic from 'next/dynamic';
+
+const VietnamMap = dynamic(
+  () => import('@xdev-asia/vietnam-map-34-provinces/react').then(m => m.VietnamMap),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="h-[600px] flex items-center justify-center">
+        Đang tải bản đồ...
+      </div>
+    )
+  }
+);
+
+export default function MapPage() {
+  return (
+    <main>
+      <h1>Bản đồ Việt Nam</h1>
+      <VietnamMap height={600} />
+    </main>
+  );
+}`}
+                />
+              </div>
+
+              <div className="p-6 bg-slate-900/50 border border-white/10 rounded-xl backdrop-blur-sm">
+                <h3 className="text-lg font-semibold text-white mb-4">Server-side Data Fetching</h3>
+                <CodeBlock
+                  language="tsx"
+                  code={`// app/map/page.tsx
+import dynamic from 'next/dynamic';
+
+const VietnamMap = dynamic(
+  () => import('@xdev-asia/vietnam-map-34-provinces/react').then(m => m.VietnamMap),
+  { ssr: false }
+);
+
+export default async function MapPage() {
+  // Fetch data server-side
+  const data = await fetch('https://api.example.com/provinces', {
+    next: { revalidate: 3600 } // Cache 1 hour
+  }).then(r => r.json());
+
+  return <VietnamMap data={data} height={600} />;
+}`}
+                />
+              </div>
             </div>
           </section>
         </div>
