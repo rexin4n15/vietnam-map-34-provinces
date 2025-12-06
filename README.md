@@ -1,4 +1,4 @@
-# Vietnam Map - 34 Provinces
+# Vietnam Map - 34 Provinces (React)
 
 ![Vietnam Map 34 Provinces](banner.jpeg)
 
@@ -6,9 +6,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Demo](https://img.shields.io/badge/Demo-Live-green.svg)](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/)
 
-Interactive map component hiển thị bản đồ Việt Nam với **34 tỉnh/thành phố** và **3,321 xã/phường** theo cấu trúc hành chính mới (QĐ 19/2025/QĐ-TTg, hiệu lực 01/07/2025).
+React component hiển thị bản đồ Việt Nam với **34 tỉnh/thành phố** và **3,321 xã/phường** theo cấu trúc hành chính mới (QĐ 19/2025/QĐ-TTg, hiệu lực 01/07/2025).
 
-**🔗 [Live Demo](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/)** | **📖 [Documentation](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/docs/vanilla.html)**
+**🔗 [Live Demo](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/)** | **📖 [Documentation](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/docs/react)**
 
 ## 🖼️ Showcase
 
@@ -21,27 +21,16 @@ Interactive map component hiển thị bản đồ Việt Nam với **34 tỉnh/
 - 🗺️ **34 tỉnh/TP mới** (6 TP trực thuộc TW + 28 tỉnh)
 - 📍 **3,321 xã/phường** với mã BNV + TMS chính thức
 - 🔄 **2 cấp hành chính**: Tỉnh → Xã (bỏ cấp Huyện)
-- 🎯 **Framework-agnostic**: Vanilla JS, React, Vue, Angular
+- ⚛️ **React Component** với TypeScript support
 - 📦 **TypeScript** full support
 
 ## 📦 Installation
 
 ```bash
-npm install @xdev-asia/vietnam-map-34-provinces highcharts
+npm install @xdev-asia/vietnam-map-34-provinces highcharts react react-dom
 ```
 
 ## 🚀 Quick Start
-
-### Vanilla JavaScript
-
-```javascript
-import { createVietnamMap } from '@xdev-asia/vietnam-map-34-provinces/vanilla';
-
-const map = createVietnamMap('#container', {
-  height: 600,
-  onProvinceClick: (province) => console.log('Clicked:', province.name)
-});
-```
 
 ### React
 
@@ -434,7 +423,7 @@ function RealtimeMap() {
 
 ## 🛠️ Core API
 
-Tra cứu dữ liệu tỉnh/xã với bất kỳ framework nào:
+Tra cứu dữ liệu tỉnh/xã:
 
 ```javascript
 import { 
@@ -1428,10 +1417,7 @@ const handleClick = useCallback((p) => console.log(p), []);
 
 ## 📖 Documentation
 
-- [Vanilla JS Guide](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/docs/vanilla.html)
-- [React Guide](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/docs/reactjs.html)
-- [Vue 3 Guide](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/docs/vuejs.html)
-- [Angular Guide](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/docs/angular.html)
+- [React Guide](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/docs/react.html)
 
 ## 🤝 Contributing
 

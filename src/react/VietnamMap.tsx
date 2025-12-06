@@ -9,9 +9,9 @@ import { PROVINCE_MAPPING, normalizeName } from "../core/provinceMapping";
 if (typeof window !== 'undefined' && typeof Highcharts === 'object') {
     if (!(Highcharts as any).Drilldown && !(Highcharts as any).seriesTypes?.mapline?.prototype?.drillTo) {
         if (typeof HighchartsDrilldown === 'function') {
-            HighchartsDrilldown(Highcharts);
+            HighchartsDrilldown(Highcharts as any);
         } else if (typeof (HighchartsDrilldown as any)?.default === 'function') {
-            (HighchartsDrilldown as any).default(Highcharts);
+            (HighchartsDrilldown as any).default(Highcharts as any);
         }
     }
 }
