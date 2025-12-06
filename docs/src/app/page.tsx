@@ -1,142 +1,153 @@
 import Link from "next/link";
 import { getStats } from "@/lib/provinces";
+import { CodeBlock } from "@/components/CodeBlock";
 
 export default function HomePage() {
   const stats = getStats();
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12">
-      {/* Hero */}
-      <section className="text-center py-16">
-        <div className="flex justify-center gap-2 mb-4">
-          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-sky-500/20 text-sky-400 border border-sky-500/30">
-            v1.0.0
-          </span>
-          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-400 border border-green-500/30">
-            QĐ 19/2025
-          </span>
-        </div>
-        <h1 className="text-5xl font-bold mb-4">
-          Vietnam Map 34 Provinces
-        </h1>
-        <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-8">
-          Interactive map component với {stats.total} tỉnh/thành phố và {stats.totalCommunes.toLocaleString()} xã/phường
-          theo cấu trúc hành chính mới.
-        </p>
-        <div className="flex justify-center gap-4">
-          <Link
-            href="/docs/vanilla"
-            className="px-6 py-3 rounded-lg bg-sky-500 text-white font-medium hover:bg-sky-600"
-          >
-            Get Started →
-          </Link>
-          <a
-            href="https://github.com/xdev-asia-labs/vietnam-map-34-provinces"
-            target="_blank"
-            className="px-6 py-3 rounded-lg border border-white/10 hover:bg-white/5"
-          >
-            View on GitHub
-          </a>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
-        {[
-          { value: stats.total, label: "Tỉnh/TP" },
-          { value: stats.cities, label: "TP Trực thuộc TW" },
-          { value: stats.merged, label: "Đã hợp nhất" },
-          { value: stats.totalCommunes.toLocaleString(), label: "Xã/Phường" },
-        ].map((stat, i) => (
-          <div
-            key={i}
-            className="bg-white/5 border border-white/10 rounded-xl p-6 text-center"
-          >
-            <div className="text-3xl font-bold text-sky-400">{stat.value}</div>
-            <div className="text-sm text-slate-400">{stat.label}</div>
+    <div className="min-h-screen bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]">
+      <div className="max-w-7xl mx-auto px-6 pt-20 pb-24">
+        {/* Hero Section */}
+        <div className="text-center max-w-4xl mx-auto mb-24 relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-300 text-sm font-medium mb-8 animate-fade-in-up">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+            </span>
+            Updated for Administrative Division 2025
           </div>
-        ))}
-      </section>
 
-      {/* Features */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-bold mb-8 text-center">Features</h2>
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight bg-clip-text text-transparent bg-linear-to-b from-white to-slate-400">
+            Interactive Vietnam Map <br />
+            <span className="bg-clip-text text-transparent bg-linear-to-r from-sky-400 to-blue-500">
+              for React Applications
+            </span>
+          </h1>
+
+          <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+            A premium, high-performance React component implementing the new <strong>34 provinces</strong> structure.
+            Drilldown support for <strong>{stats.totalCommunes.toLocaleString()}</strong> communes.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+            <Link
+              href="/docs/react"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-sky-500 text-white font-semibold shadow-lg shadow-sky-500/25 hover:bg-sky-400 hover:shadow-sky-500/40 hover:-translate-y-0.5 transition-all text-center"
+            >
+              Get Started
+            </Link>
+            <div className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-slate-800/50 border border-white/10 text-slate-300 font-mono text-sm flex items-center justify-center gap-3 hover:bg-slate-800/80 transition-colors cursor-copy group">
+              <span className="text-slate-500 select-none">$</span>
+              npm install @xdev-asia/vietnam-map-34-provinces
+            </div>
+          </div>
+
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 border-t border-white/5 pt-12">
+            {[
+              { value: stats.total, label: "New Provinces" },
+              { value: "3,321", label: "Communes" },
+              { value: "React 18+", label: "Compatible" },
+              { value: "100%", label: "TypeScript" },
+            ].map((stat, i) => (
+              <div key={i} className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-white mb-1">{stat.value}</div>
+                <div className="text-sm text-slate-500 uppercase tracking-wider font-medium">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Feature Preview */}
+        <div className="grid md:grid-cols-2 gap-8 items-center mb-32 bg-slate-900/40 border border-white/5 rounded-3xl p-8 backdrop-blur-sm">
+          <div className="space-y-6">
+            <h2 className="text-3xl font-bold text-white">Simple Integration</h2>
+            <p className="text-slate-400 text-lg">
+              Just import the component and pass your data. We handle the complex localized topology,
+              merge logic (QĐ 19/2025), and drilldown interactions automatically.
+            </p>
+            <ul className="space-y-3">
+              {[
+                "Automatic QĐ 19/2025 province merging",
+                "Built-in Drilldown to Commune level",
+                "Fully typed with TypeScript",
+                "Customizable styles & tooltips"
+              ].map((item, i) => (
+                <li key={i} className="flex items-center gap-3 text-slate-300">
+                  <div className="w-6 h-6 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center text-xs">✓</div>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-linear-to-r from-sky-500 to-blue-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+            <div className="relative bg-slate-950 border border-white/10 rounded-xl overflow-hidden shadow-2xl">
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-slate-900/50">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50"></div>
+                </div>
+                <span className="text-xs text-slate-500 ml-2">App.tsx</span>
+              </div>
+              <CodeBlock
+                language="tsx"
+                code={`import { VietnamMap } from '@xdev-asia/vietnam-map-34-provinces/react';
+
+export default function Dashboard() {
+  return (
+    <div className="h-[600px] bg-slate-900 rounded-xl">
+      <VietnamMap 
+        onProvinceClick={(p) => console.log(p)}
+        colorAxis={{
+          minColor: '#1e293b',
+          maxColor: '#0ea5e9'
+        }}
+      />
+    </div>
+  );
+}`}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Feature Cards */}
         <div className="grid md:grid-cols-3 gap-6">
           {[
             {
-              icon: "🗺️",
-              title: "34 Provinces",
-              desc: "Data chuẩn theo QĐ 19/2025 với mã BNV + TMS",
+              title: "34 New Provinces",
+              desc: "Accurate geography based on the latest NQ 60-NQ/TW and QĐ 19/2025 administrative reforms.",
+              gradient: "from-purple-500/20 to-blue-500/20",
+              border: "group-hover:border-purple-500/50"
             },
             {
-              icon: "📍",
-              title: "3,321 Communes",
-              desc: "Danh sách xã/phường mới sau sáp nhập",
+              title: "High Performance",
+              desc: "Optimized GeoJSON rendering using Highcharts engine for smooth 60fps interactions.",
+              gradient: "from-blue-500/20 to-teal-500/20",
+              border: "group-hover:border-sky-500/50"
             },
             {
-              icon: "⚡",
-              title: "Framework Agnostic",
-              desc: "Vanilla JS, React, Vue, Angular",
-            },
-            {
-              icon: "🔍",
-              title: "Drilldown",
-              desc: "Click vào tỉnh để xem danh sách xã",
-            },
-            {
-              icon: "📦",
-              title: "TypeScript",
-              desc: "Full type support với interfaces",
-            },
-            {
-              icon: "🎨",
-              title: "Customizable",
-              desc: "Colors, styles, tooltips, labels",
-            },
-          ].map((feature, i) => (
-            <div
-              key={i}
-              className="bg-white/5 border border-white/10 rounded-xl p-6"
-            >
-              <div className="text-3xl mb-3">{feature.icon}</div>
-              <h3 className="font-semibold mb-2">{feature.title}</h3>
-              <p className="text-sm text-slate-400">{feature.desc}</p>
+              title: "Data Drilldown",
+              desc: "Interactive drilldown from province to commune level with no extra configuration needed.",
+              gradient: "from-teal-500/20 to-green-500/20",
+              border: "group-hover:border-teal-500/50"
+            }
+          ].map((card, i) => (
+            <div key={i} className={`group relative p-1 rounded-2xl bg-linear-to-br ${card.gradient} bg-opacity-0 transition-all duration-500`}>
+              <div className={`h-full bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-xl p-8 transition-colors ${card.border}`}>
+                <h3 className="text-xl font-bold text-white mb-3">{card.title}</h3>
+                <p className="text-slate-400 leading-relaxed">
+                  {card.desc}
+                </p>
+              </div>
             </div>
           ))}
         </div>
-      </section>
-
-      {/* Quick Install */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-bold mb-4 text-center">Quick Install</h2>
-        <div className="max-w-lg mx-auto bg-slate-800 rounded-lg p-4 font-mono text-sm">
-          <span className="text-slate-500">$</span>{" "}
-          <span className="text-green-400">npm install</span>{" "}
-          <span className="text-sky-400">@xdev-asia/vietnam-map-34-provinces</span>{" "}
-          <span className="text-sky-400">highcharts</span>
-        </div>
-      </section>
-
-      {/* Docs Links */}
-      <section>
-        <h2 className="text-2xl font-bold mb-8 text-center">Documentation</h2>
-        <div className="grid md:grid-cols-4 gap-4">
-          {[
-            { href: "/docs/vanilla", label: "Vanilla JS", color: "yellow" },
-            { href: "/docs/react", label: "React", color: "cyan" },
-            { href: "/docs/vue", label: "Vue", color: "green" },
-            { href: "/docs/angular", label: "Angular", color: "red" },
-          ].map((doc) => (
-            <Link
-              key={doc.href}
-              href={doc.href}
-              className="bg-white/5 border border-white/10 rounded-xl p-6 text-center hover:border-sky-500/50 transition-colors"
-            >
-              <div className="font-semibold">{doc.label}</div>
-            </Link>
-          ))}
-        </div>
-      </section>
+      </div>
     </div>
   );
 }
