@@ -36,6 +36,8 @@ export interface VietnamMapProps {
     showZoomControls?: boolean;
     /** Show province name labels on the map */
     showLabels?: boolean;
+    /** Enable drilldown to commune level when clicking a province */
+    enableDrilldown?: boolean;
     /** Custom tooltip formatter function - receives point data, returns HTML string */
     tooltipFormatter?: (point: ProvinceData) => string;
     /** Hover state color */
@@ -55,6 +57,7 @@ const VietnamMap: React.FC<VietnamMapProps> = ({
     onProvinceClick,
     showZoomControls = true,
     showLabels = true,
+    enableDrilldown = true,
     tooltipFormatter,
     hoverColor = '#fbbf24',
     borderColor = '#ffffff',
@@ -157,11 +160,11 @@ const VietnamMap: React.FC<VietnamMapProps> = ({
         return data || mergedFeatures.map((f: any) => ({
             "hc-key": f.properties["hc-key"],
             id: f.properties["hc-key"],
-            drilldown: f.properties["hc-key"].replace("vn-new-", ""),
+            drilldown: enableDrilldown ? f.properties["hc-key"].replace("vn-new-", "") : undefined,
             value: Math.floor(Math.random() * 100),
             name: f.properties["name"]
         }));
-    }, [data, mergedFeatures]);
+    }, [data, mergedFeatures, enableDrilldown]);
 
     // Stable drilldown handler
     const handleDrilldown = useCallback(async function (this: any, e: any) {
@@ -233,7 +236,7 @@ const VietnamMap: React.FC<VietnamMapProps> = ({
                 backgroundColor: 'transparent',
                 height: height,
                 style: { fontFamily: 'inherit' },
-                events: { drilldown: handleDrilldown }
+                events: enableDrilldown ? { drilldown: handleDrilldown } : {}
             },
             title: { text: undefined },
             credits: { enabled: false },
@@ -319,7 +322,7 @@ const VietnamMap: React.FC<VietnamMapProps> = ({
         if (!isDrillingRef.current) {
             setMapOptions({ ...options, ...customOptions });
         }
-    }, [processedTopology, mapData, height, colorAxis, showZoomControls, showLabels, hoverColor, borderColor, handleDrilldown, customOptions]);
+    }, [processedTopology, mapData, height, colorAxis, showZoomControls, showLabels, enableDrilldown, hoverColor, borderColor, handleDrilldown, customOptions]);
 
     return (
         <div className={`w-full relative ${className || ''}`}>

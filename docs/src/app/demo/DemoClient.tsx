@@ -22,6 +22,7 @@ export default function DemoPage() {
     // Map options
     const [showLabels, setShowLabels] = useState(true);
     const [showZoomControls, setShowZoomControls] = useState(true);
+    const [enableDrilldown, setEnableDrilldown] = useState(true);
     const [mapHeight, setMapHeight] = useState(600);
     const [hoverColor, setHoverColor] = useState("#fbbf24");
     const [useCustomTooltip, setUseCustomTooltip] = useState(false);
@@ -71,6 +72,7 @@ export default function DemoPage() {
                             height={mapHeight}
                             showLabels={showLabels}
                             showZoomControls={showZoomControls}
+                            enableDrilldown={enableDrilldown}
                             hoverColor={hoverColor}
                             tooltipFormatter={tooltipFormatter}
                             onProvinceClick={handleProvinceClick}
@@ -119,6 +121,17 @@ export default function DemoPage() {
                                         className={`relative w-11 h-6 rounded-full transition-colors ${showZoomControls ? 'bg-sky-500' : 'bg-slate-600'}`}
                                     >
                                         <span className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow ${showZoomControls ? 'translate-x-5' : 'translate-x-0'}`} />
+                                    </button>
+                                </label>
+
+                                {/* Enable Drilldown */}
+                                <label className="flex items-center justify-between cursor-pointer group">
+                                    <span className="text-sm text-slate-300 group-hover:text-white transition-colors">Drilldown (xem xã)</span>
+                                    <button
+                                        onClick={() => setEnableDrilldown(!enableDrilldown)}
+                                        className={`relative w-11 h-6 rounded-full transition-colors ${enableDrilldown ? 'bg-sky-500' : 'bg-slate-600'}`}
+                                    >
+                                        <span className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow ${enableDrilldown ? 'translate-x-5' : 'translate-x-0'}`} />
                                     </button>
                                 </label>
 
