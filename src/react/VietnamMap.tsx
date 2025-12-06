@@ -257,17 +257,19 @@ const VietnamMap: React.FC<VietnamMapProps> = ({
                         color: 'white',
                         textDecoration: 'none'
                     },
-                    drillUpButton: {
+                    breadcrumbs: {
                         relativeTo: 'spacingBox',
+                        floating: true,
                         position: {
+                            align: 'left',
                             y: 0,
                             x: 0
                         },
-                        theme: {
+                        buttonTheme: {
                             fill: 'white',
                             'stroke-width': 1,
                             stroke: 'silver',
-                            r: 0,
+                            r: 4,
                             states: {
                                 hover: {
                                     fill: '#f1f5f9'
@@ -279,7 +281,7 @@ const VietnamMap: React.FC<VietnamMapProps> = ({
                             }
                         }
                     }
-                },
+                } as Highcharts.DrilldownOptions,
                 colorAxis: colorAxis || {
                     min: 0,
                     minColor: '#E1F5FE',
