@@ -1,0 +1,94 @@
+{
+    "name": "@xdev-asia-labs/vietnam-map-34-provinces",
+    "version": "1.0.0",
+    "description": "Vietnam Map with 34 new provinces (Nghị quyết 60-NQ/TW) - Framework-agnostic (vanilla JS, React, Vue, Angular)",
+    "main": "dist/index.js",
+    "module": "dist/index.esm.js",
+    "browser": "dist/index.umd.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.js"
+        },
+        "./core": {
+            "types": "./dist/core/index.d.ts",
+            "import": "./dist/core/index.mjs",
+            "require": "./dist/core/index.js"
+        },
+        "./vanilla": {
+            "types": "./dist/vanilla/index.d.ts",
+            "import": "./dist/vanilla/index.mjs",
+            "require": "./dist/vanilla/index.js"
+        },
+        "./react": {
+            "types": "./dist/react/index.d.ts",
+            "import": "./dist/react/index.mjs",
+            "require": "./dist/react/index.js"
+        }
+    },
+    "files": [
+        "dist",
+        "src"
+    ],
+    "scripts": {
+        "build": "tsup src/index.ts src/core/index.ts src/vanilla/index.ts src/react/index.ts --format cjs,esm --dts",
+        "build:umd": "tsup src/index.ts --format iife --global-name VietnamMap --out-dir dist",
+        "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+        "lint": "eslint src --ext .ts,.tsx"
+    },
+    "keywords": [
+        "vietnam",
+        "map",
+        "provinces",
+        "34-provinces",
+        "nghị-quyết-60",
+        "administrative-units",
+        "highcharts",
+        "vanilla-js",
+        "react",
+        "vue",
+        "angular",
+        "framework-agnostic"
+    ],
+    "author": "xdev-asia-labs",
+    "license": "MIT",
+    "peerDependencies": {
+        "highcharts": "^11.0.0"
+    },
+    "peerDependenciesMeta": {
+        "react": {
+            "optional": true
+        },
+        "react-dom": {
+            "optional": true
+        },
+        "highcharts-react-official": {
+            "optional": true
+        },
+        "antd": {
+            "optional": true
+        }
+    },
+    "optionalDependencies": {
+        "react": "^18.0.0",
+        "react-dom": "^18.0.0",
+        "highcharts-react-official": "^3.0.0",
+        "antd": "^5.0.0"
+    },
+    "devDependencies": {
+        "@types/react": "^18.2.0",
+        "@types/react-dom": "^18.2.0",
+        "typescript": "^5.3.0",
+        "tsup": "^8.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/xdev-asia-labs/vietnam-map-34-provinces.git"
+    },
+    "homepage": "https://github.com/xdev-asia-labs/vietnam-map-34-provinces#readme",
+    "bugs": {
+        "url": "https://github.com/xdev-asia-labs/vietnam-map-34-provinces/issues"
+    }
+}
