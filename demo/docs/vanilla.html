@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanilla JS - Vietnam Map 34 Provinces</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-content">
+            <a href="../" class="logo">🇻🇳 Vietnam Map 34</a>
+            <div class="nav-links">
+                <a href="../">Demo</a>
+                <a href="vanilla.html" class="active">Vanilla JS</a>
+                <a href="reactjs.html">React</a>
+                <a href="vuejs.html">Vue</a>
+                <a href="angular.html">Angular</a>
+            </div>
+            <div class="nav-buttons">
+                <a href="https://github.com/xdev-asia-labs/vietnam-map-34-provinces" class="btn btn-outline"
+                    target="_blank">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="doc-header">
+            <span class="badge badge-js">Vanilla JS</span>
+            <h1>Vanilla JavaScript</h1>
+            <p class="subtitle">Framework-agnostic - hoạt động với mọi project JavaScript</p>
+        </div>
+
+        <section>
+            <h2>📦 Installation</h2>
+
+            <h3>npm/yarn</h3>
+            <pre><code class="language-bash">npm install @xdev-asia/vietnam-map-34-provinces highcharts</code></pre>
+
+            <h3>CDN</h3>
+            <pre><code class="language-html">&lt;script src="https://code.highcharts.com/maps/highmaps.js"&gt;&lt;/script&gt;
+&lt;script src="https://code.highcharts.com/maps/modules/drilldown.js"&gt;&lt;/script&gt;
+&lt;script src="https://unpkg.com/@xdev-asia/vietnam-map-34-provinces"&gt;&lt;/script&gt;</code></pre>
+        </section>
+
+        <section>
+            <h2>🚀 Quick Start</h2>
+            <pre><code class="language-javascript">import { createVietnamMap } from '@xdev-asia/vietnam-map-34-provinces/vanilla';
+
+// Basic usage
+const map = createVietnamMap('#container');
+
+// With options
+const map = createVietnamMap('#container', {
+  height: 600,
+  drilldown: { enabled: true },
+  onProvinceClick: (province) => console.log(province)
+});</code></pre>
+        </section>
+
+        <section>
+            <h2>⚙️ Full Options</h2>
+            <pre><code class="language-javascript">const map = createVietnamMap('#container', {
+  // === DRILLDOWN ===
+  drilldown: {
+    enabled: true,
+    onDrilldown: (province) => console.log('Viewing:', province.name),
+    onDrillup: () => console.log('Back to country'),
+    onLoading: (loading) => showSpinner(loading)
+  },
+  
+  // === CALLBACKS ===
+  onProvinceClick: (province) => handleClick(province),
+  onProvinceHover: (province) => updateTooltip(province),
+  onCommuneClick: (commune) => handleCommuneClick(commune),
+  onReady: (instance) => console.log('Map ready!'),
+  
+  // === APPEARANCE ===
+  height: 600,
+  backgroundColor: 'transparent',
+  
+  colors: {
+    min: '#E1F5FE',
+    max: '#01579B',
+    stops: [[0, '#E1F5FE'], [0.5, '#4FC3F7'], [1, '#01579B']]
+  },
+  
+  style: {
+    borderColor: '#ffffff',
+    borderWidth: 0.5,
+    hoverColor: '#fbbf24',
+    hoverBorderColor: '#d97706',
+    selectColor: '#fbbf24'
+  },
+  
+  dataLabels: {
+    enabled: true,
+    fontSize: '10px',
+    color: '#1e293b',
+    format: '{point.name}'
+  },
+  
+  tooltip: {
+    enabled: true,
+    backgroundColor: 'rgba(255,255,255,0.95)',
+    borderColor: '#e2e8f0',
+    formatter: (point) => `&lt;b&gt;${point.name}&lt;/b&gt;: ${point.value}`
+  },
+  
+  // === DATA ===
+  data: [
+    { 'hc-key': 'vn-new-ha-noi', value: 5000, customField: 'abc' },
+    { 'hc-key': 'vn-new-ho-chi-minh', value: 8000 }
+  ],
+  
+  // === NAVIGATION ===
+  navigation: true,
+  doubleClickZoom: true,
+  
+  // === ADVANCED (merge with Highcharts options) ===
+  highchartsOptions: {
+    chart: { animation: false }
+  }
+});</code></pre>
+        </section>
+
+        <section>
+            <h2>🔧 Methods</h2>
+            <pre><code class="language-javascript">// Zoom to province
+map.zoomToProvince('vn-new-ha-noi');
+
+// Reset zoom
+map.resetZoom();
+
+// Update data
+map.updateData([
+  { 'hc-key': 'vn-new-ha-noi', value: 10000 }
+]);
+
+// Drilldown to province (load commune data)
+await map.drilldownTo('Hà Nội');
+
+// Return to country view
+map.drillUp();
+
+// Check current province
+const current = map.getCurrentProvince();
+// Returns 'Hà Nội' or null
+
+// Get processed topology
+const topology = map.getTopology();
+
+// Access Highcharts instance
+map.chart.setSize(800, 600);
+
+// Destroy
+map.destroy();</code></pre>
+        </section>
+
+        <section>
+            <h2>📊 Using Core Utilities</h2>
+            <pre><code class="language-javascript">import { 
+  NEW_34_PROVINCES,
+  getProvinceStats,
+  loadProvinceCommunes,
+  getNewProvinceName,
+  normalizeName
+} from '@xdev-asia/vietnam-map-34-provinces/core';
+
+// Get all provinces
+console.log(NEW_34_PROVINCES);
+// [{ code: 1, name: 'Hà Nội', ... }, ...]
+
+// Get statistics
+const stats = getProvinceStats();
+console.log(stats.totalProvinces);  // 34
+console.log(stats.totalCommunes);   // 11163
+console.log(stats.largestProvince); // { name: 'Thanh Hóa', commune_count: 635 }
+
+// Load commune data
+const hanoiCommunes = await loadProvinceCommunes('Hà Nội');
+console.log(hanoiCommunes.features.length); // 584
+
+// Get new province name from old
+const newName = getNewProvinceName('Hà Giang');
+console.log(newName); // 'Tuyên Quang'
+
+// Normalize name for comparison
+const normalized = normalizeName('Thừa Thiên Huế');
+console.log(normalized); // 'thua thien hue'</code></pre>
+        </section>
+
+        <section>
+            <h2>📋 TypeScript Types</h2>
+            <pre><code class="language-typescript">import type {
+  VietnamMapOptions,
+  VietnamMapInstance,
+  ProvinceData,
+  CommuneData,
+  ColorConfig,
+  TooltipConfig,
+  DataLabelConfig,
+  MapStyleConfig,
+  DrilldownConfig
+} from '@xdev-asia/vietnam-map-34-provinces/vanilla';
+
+import type {
+  Province,
+  OldProvince,
+  ProvinceIndex,
+  ProvinceGeoJSON
+} from '@xdev-asia/vietnam-map-34-provinces/core';
+
+// Usage with types
+const options: VietnamMapOptions = {
+  height: 600,
+  drilldown: { enabled: true } as DrilldownConfig,
+  colors: { min: '#E1F5FE', max: '#01579B' } as ColorConfig
+};
+
+const map: VietnamMapInstance = createVietnamMap('#map', options);</code></pre>
+        </section>
+
+        <section>
+            <h2>🌐 CDN Usage</h2>
+            <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script src="https://code.highcharts.com/maps/highmaps.js"&gt;&lt;/script&gt;
+  &lt;script src="https://code.highcharts.com/maps/modules/drilldown.js"&gt;&lt;/script&gt;
+  &lt;script src="https://unpkg.com/@xdev-asia/vietnam-map-34-provinces"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id="map" style="height: 600px"&gt;&lt;/div&gt;
+  
+  &lt;script&gt;
+    // Global VietnamMap34 object available
+    const { createVietnamMap, NEW_34_PROVINCES } = VietnamMap34;
+    
+    const map = createVietnamMap('#map', {
+      drilldown: { enabled: true }
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        </section>
+
+        <div class="doc-nav">
+            <a href="angular.html" class="btn btn-outline">← Angular</a>
+            <a href="reactjs.html" class="btn btn-primary">React →</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>Made with ❤️ by <a href="https://github.com/xdev-asia-labs">xdev-asia-labs</a></p>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue.js - Vietnam Map 34 Provinces</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-content">
+            <a href="../" class="logo">🇻🇳 Vietnam Map 34</a>
+            <div class="nav-links">
+                <a href="../">Demo</a>
+                <a href="vanilla.html">Vanilla JS</a>
+                <a href="reactjs.html">React</a>
+                <a href="vuejs.html" class="active">Vue</a>
+                <a href="angular.html">Angular</a>
+            </div>
+            <div class="nav-buttons">
+                <a href="https://github.com/xdev-asia-labs/vietnam-map-34-provinces" class="btn btn-outline"
+                    target="_blank">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="doc-header">
+            <span class="badge badge-vue">Vue 3</span>
+            <h1>Vue.js Integration</h1>
+            <p class="subtitle">Hướng dẫn sử dụng với Vue 3 Composition API</p>
+        </div>
+
+        <section>
+            <h2>📦 Installation</h2>
+            <pre><code class="language-bash">npm install @xdev-asia/vietnam-map-34-provinces highcharts</code></pre>
+        </section>
+
+        <section>
+            <h2>🚀 Basic Usage</h2>
+            <pre><code class="language-html">&lt;template&gt;
+  &lt;div ref="mapContainer" style="height: 600px"&gt;&lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+import { ref, onMounted, onUnmounted } from 'vue';
+import { createVietnamMap } from '@xdev-asia/vietnam-map-34-provinces/vanilla';
+
+const mapContainer = ref(null);
+let mapInstance = null;
+
+onMounted(() => {
+  mapInstance = createVietnamMap(mapContainer.value, {
+    drilldown: { enabled: true },
+    onProvinceClick: (province) => {
+      console.log('Clicked:', province.name);
+    }
+  });
+});
+
+onUnmounted(() => {
+  if (mapInstance) {
+    mapInstance.destroy();
+  }
+});
+&lt;/script&gt;</code></pre>
+        </section>
+
+        <section>
+            <h2>🎯 Composable Hook</h2>
+            <pre><code class="language-javascript">// composables/useVietnamMap.js
+import { ref, onMounted, onUnmounted } from 'vue';
+import { createVietnamMap } from '@xdev-asia/vietnam-map-34-provinces/vanilla';
+
+export function useVietnamMap(containerRef, options = {}) {
+  const instance = ref(null);
+  const currentProvince = ref(null);
+  const loading = ref(false);
+  
+  onMounted(() => {
+    if (!containerRef.value) return;
+    
+    instance.value = createVietnamMap(containerRef.value, {
+      ...options,
+      drilldown: {
+        enabled: true,
+        onDrilldown: (province) => {
+          currentProvince.value = province.name;
+        },
+        onDrillup: () => {
+          currentProvince.value = null;
+        },
+        onLoading: (isLoading) => {
+          loading.value = isLoading;
+        }
+      }
+    });
+  });
+  
+  onUnmounted(() => {
+    instance.value?.destroy();
+  });
+  
+  const zoomToProvince = (id) => instance.value?.zoomToProvince(id);
+  const resetZoom = () => instance.value?.resetZoom();
+  const drilldownTo = (name) => instance.value?.drilldownTo(name);
+  const drillUp = () => instance.value?.drillUp();
+  
+  return {
+    instance,
+    currentProvince,
+    loading,
+    zoomToProvince,
+    resetZoom,
+    drilldownTo,
+    drillUp
+  };
+}</code></pre>
+
+            <h3>Usage:</h3>
+            <pre><code class="language-html">&lt;template&gt;
+  &lt;div&gt;
+    &lt;div v-if="loading" class="loading"&gt;Loading...&lt;/div&gt;
+    &lt;div v-if="currentProvince"&gt;
+      Viewing: {{ currentProvince }}
+      &lt;button @click="drillUp"&gt;Back&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div ref="mapRef" style="height: 600px"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+import { ref } from 'vue';
+import { useVietnamMap } from './composables/useVietnamMap';
+
+const mapRef = ref(null);
+const { currentProvince, loading, drillUp } = useVietnamMap(mapRef, {
+  height: 600,
+  colors: { min: '#E1F5FE', max: '#01579B' }
+});
+&lt;/script&gt;</code></pre>
+        </section>
+
+        <section>
+            <h2>📊 Using Province Data</h2>
+            <pre><code class="language-html">&lt;template&gt;
+  &lt;div&gt;
+    &lt;h2&gt;Province Statistics&lt;/h2&gt;
+    &lt;p&gt;Total: {{ stats.totalProvinces }} provinces&lt;/p&gt;
+    &lt;p&gt;Communes: {{ stats.totalCommunes }}&lt;/p&gt;
+    
+    &lt;ul&gt;
+      &lt;li v-for="province in provinces" :key="province.code"&gt;
+        {{ province.name }} ({{ province.merged_from?.length || 0 }} merged)
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+import { NEW_34_PROVINCES, getProvinceStats } from '@xdev-asia/vietnam-map-34-provinces/core';
+
+const provinces = NEW_34_PROVINCES;
+const stats = getProvinceStats();
+&lt;/script&gt;</code></pre>
+        </section>
+
+        <section>
+            <h2>🎨 Styling with Scoped CSS</h2>
+            <pre><code class="language-html">&lt;template&gt;
+  &lt;div class="map-wrapper"&gt;
+    &lt;div ref="mapRef" class="map-container"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;style scoped&gt;
+.map-wrapper {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+  padding: 2rem;
+  border-radius: 1rem;
+}
+
+.map-container {
+  height: 600px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+/* Style Highcharts tooltip */
+:deep(.highcharts-tooltip) {
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+}
+&lt;/style&gt;</code></pre>
+        </section>
+
+        <div class="doc-nav">
+            <a href="reactjs.html" class="btn btn-outline">← React</a>
+            <a href="angular.html" class="btn btn-primary">Angular →</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>Made with ❤️ by <a href="https://github.com/xdev-asia-labs">xdev-asia-labs</a></p>
+    </footer>
+</body>
+
+</html>
