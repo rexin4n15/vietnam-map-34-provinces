@@ -29,6 +29,8 @@ export interface VietnamMapProps {
     onProvinceClick?: (province: any) => void;
     /** Show zoom control buttons */
     showZoomControls?: boolean;
+    /** Show province name labels on the map */
+    showLabels?: boolean;
     /** Custom options to override Highcharts config */
     options?: Highcharts.Options;
 }
@@ -39,6 +41,7 @@ const VietnamMap: React.FC<VietnamMapProps> = ({
     colorAxis,
     onProvinceClick,
     showZoomControls = true,
+    showLabels = true,
     options: customOptions
 }) => {
     const chartRef = useRef<HighchartsReact.RefObject>(null);
@@ -316,7 +319,7 @@ const VietnamMap: React.FC<VietnamMapProps> = ({
                         }
                     },
                     dataLabels: {
-                        enabled: true,
+                        enabled: showLabels,
                         format: '{point.name}',
                         allowOverlap: true,
                         crop: false,
@@ -350,7 +353,7 @@ const VietnamMap: React.FC<VietnamMapProps> = ({
                 setMapOptions({ ...defaultOptions, ...customOptions });
             }
         }
-    }, [topology, data, height, colorAxis, showZoomControls, onProvinceClick, customOptions]);
+    }, [topology, data, height, colorAxis, showZoomControls, showLabels, onProvinceClick, customOptions]);
 
     return (
         <div className="w-full relative">
