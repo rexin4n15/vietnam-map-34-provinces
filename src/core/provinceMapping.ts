@@ -8,6 +8,8 @@
  * - 11 đơn vị giữ nguyên (unchanged provinces)
  * 
  * Cấu trúc mới: Tỉnh → Xã (bỏ cấp huyện)
+ * 
+ * UPDATED: Fixed per official NQ 60-NQ/TW sources
  */
 
 // === TYPES & INTERFACES ===
@@ -321,8 +323,7 @@ export const NEW_34_PROVINCES: Province[] = [
         phone_code: 263,
         merged_from: [
             { name: "Lâm Đồng", code: 68, codename: "lam_dong" },
-            { name: "Đắk Nông", code: 67, codename: "dak_nong" },
-            { name: "Bình Thuận", code: 60, codename: "binh_thuan" }
+            { name: "Đắk Nông", code: 67, codename: "dak_nong" }
         ],
         administrative_center: "Lâm Đồng"
     },
@@ -340,69 +341,43 @@ export const NEW_34_PROVINCES: Province[] = [
     },
     {
         code: 27,
+        name: "Bình Thuận",
+        codename: "binh_thuan",
+        division_type: "tỉnh",
+        phone_code: 252,
+        merged_from: [
+            { name: "Bình Thuận", code: 60, codename: "binh_thuan" },
+            { name: "Bình Phước", code: 70, codename: "binh_phuoc" }
+        ],
+        administrative_center: "Bình Thuận"
+    },
+    {
+        code: 28,
         name: "Hồ Chí Minh",
         codename: "ho_chi_minh",
         division_type: "thành phố",
         phone_code: 28,
         merged_from: [
-            { name: "Bà Rịa - Vũng Tàu", code: 77, codename: "ba_ria_vung_tau" },
-            { name: "Bình Dương", code: 74, codename: "binh_duong" },
+            { name: "Long An", code: 80, codename: "long_an" },
             { name: "Hồ Chí Minh", code: 79, codename: "ho_chi_minh" }
         ],
         administrative_center: "Hồ Chí Minh"
     },
     {
-        code: 28,
+        code: 29,
         name: "Đồng Nai",
         codename: "dong_nai",
         division_type: "tỉnh",
         phone_code: 251,
         merged_from: [
             { name: "Đồng Nai", code: 75, codename: "dong_nai" },
-            { name: "Bình Phước", code: 70, codename: "binh_phuoc" }
+            { name: "Bà Rịa - Vũng Tàu", code: 77, codename: "ba_ria_vung_tau" },
+            { name: "Bình Dương", code: 74, codename: "binh_duong" }
         ],
         administrative_center: "Đồng Nai"
     },
     {
-        code: 29,
-        name: "Tây Ninh",
-        codename: "tay_ninh",
-        division_type: "tỉnh",
-        phone_code: 272,
-        merged_from: [
-            { name: "Tây Ninh", code: 72, codename: "tay_ninh" },
-            { name: "Long An", code: 80, codename: "long_an" }
-        ],
-        administrative_center: "Long An"
-    },
-    {
         code: 30,
-        name: "Cần Thơ",
-        codename: "can_tho",
-        division_type: "thành phố",
-        phone_code: 292,
-        merged_from: [
-            { name: "Cần Thơ", code: 92, codename: "can_tho" },
-            { name: "Sóc Trăng", code: 94, codename: "soc_trang" },
-            { name: "Hậu Giang", code: 93, codename: "hau_giang" }
-        ],
-        administrative_center: "Cần Thơ"
-    },
-    {
-        code: 31,
-        name: "Vĩnh Long",
-        codename: "vinh_long",
-        division_type: "tỉnh",
-        phone_code: 270,
-        merged_from: [
-            { name: "Bến Tre", code: 83, codename: "ben_tre" },
-            { name: "Vĩnh Long", code: 86, codename: "vinh_long" },
-            { name: "Trà Vinh", code: 84, codename: "tra_vinh" }
-        ],
-        administrative_center: "Vĩnh Long"
-    },
-    {
-        code: 32,
         name: "Đồng Tháp",
         codename: "dong_thap",
         division_type: "tỉnh",
@@ -411,22 +386,10 @@ export const NEW_34_PROVINCES: Province[] = [
             { name: "Tiền Giang", code: 82, codename: "tien_giang" },
             { name: "Đồng Tháp", code: 87, codename: "dong_thap" }
         ],
-        administrative_center: "Tiền Giang"
+        administrative_center: "Đồng Tháp"
     },
     {
-        code: 33,
-        name: "Cà Mau",
-        codename: "ca_mau",
-        division_type: "tỉnh",
-        phone_code: 290,
-        merged_from: [
-            { name: "Bạc Liêu", code: 95, codename: "bac_lieu" },
-            { name: "Cà Mau", code: 96, codename: "ca_mau" }
-        ],
-        administrative_center: "Cà Mau"
-    },
-    {
-        code: 34,
+        code: 31,
         name: "An Giang",
         codename: "an_giang",
         division_type: "tỉnh",
@@ -435,7 +398,55 @@ export const NEW_34_PROVINCES: Province[] = [
             { name: "An Giang", code: 89, codename: "an_giang" },
             { name: "Kiên Giang", code: 91, codename: "kien_giang" }
         ],
-        administrative_center: "Kiên Giang"
+        administrative_center: "An Giang"
+    },
+    {
+        code: 32,
+        name: "Bạc Liêu",
+        codename: "bac_lieu",
+        division_type: "tỉnh",
+        phone_code: 291,
+        merged_from: [
+            { name: "Bạc Liêu", code: 95, codename: "bac_lieu" },
+            { name: "Sóc Trăng", code: 94, codename: "soc_trang" }
+        ],
+        administrative_center: "Bạc Liêu"
+    },
+    {
+        code: 33,
+        name: "Cà Mau",
+        codename: "ca_mau",
+        division_type: "tỉnh",
+        phone_code: 290,
+        merged_from: [
+            { name: "Cà Mau", code: 96, codename: "ca_mau" },
+            { name: "Bến Tre", code: 83, codename: "ben_tre" }
+        ],
+        administrative_center: "Cà Mau"
+    },
+    {
+        code: 34,
+        name: "Trà Vinh",
+        codename: "tra_vinh",
+        division_type: "tỉnh",
+        phone_code: 294,
+        merged_from: [
+            { name: "Trà Vinh", code: 84, codename: "tra_vinh" },
+            { name: "Vĩnh Long", code: 86, codename: "vinh_long" }
+        ],
+        administrative_center: "Trà Vinh"
+    },
+    {
+        code: 35,
+        name: "Cần Thơ",
+        codename: "can_tho",
+        division_type: "thành phố",
+        phone_code: 292,
+        merged_from: [
+            { name: "Cần Thơ", code: 92, codename: "can_tho" },
+            { name: "Hậu Giang", code: 93, codename: "hau_giang" }
+        ],
+        administrative_center: "Cần Thơ"
     }
 ];
 
@@ -465,81 +476,87 @@ export const OLD_TO_NEW_PROVINCE_MAP: Record<string, string> = {
     // 23 đơn vị hợp nhất
     "tuyen quang": "Tuyên Quang",
     "ha giang": "Tuyên Quang",
-    
+
     "lao cai": "Lào Cai",
     "yen bai": "Lào Cai",
-    
+
     "bac kan": "Thái Nguyên",
     "bac can": "Thái Nguyên",
     "thai nguyen": "Thái Nguyên",
-    
+
     "vinh phuc": "Phú Thọ",
     "phu tho": "Phú Thọ",
     "hoa binh": "Phú Thọ",
-    
+
     "bac ninh": "Bắc Ninh",
     "bac giang": "Bắc Ninh",
-    
+
     "hung yen": "Hưng Yên",
     "thai binh": "Hưng Yên",
-    
+
     "hai duong": "Hải Phòng",
     "hai phong": "Hải Phòng",
-    
+
     "ha nam": "Ninh Bình",
     "ninh binh": "Ninh Bình",
     "nam dinh": "Ninh Bình",
-    
+
     "quang binh": "Quảng Trị",
     "quang tri": "Quảng Trị",
-    
+
     "quang nam": "Đà Nẵng",
     "da nang": "Đà Nẵng",
-    
+
     "kon tum": "Quảng Ngãi",
     "quang ngai": "Quảng Ngãi",
-    
+
     "gia lai": "Gia Lai",
     "binh dinh": "Gia Lai",
-    
+
     "ninh thuan": "Khánh Hòa",
     "khanh hoa": "Khánh Hòa",
-    
+
     "lam dong": "Lâm Đồng",
     "dak nong": "Lâm Đồng",
-    "binh thuan": "Lâm Đồng",
-    
+
     "dak lak": "Đắk Lắk",
     "phu yen": "Đắk Lắk",
-    
-    "ba ria - vung tau": "Hồ Chí Minh",
-    "ba ria vung tau": "Hồ Chí Minh",
-    "binh duong": "Hồ Chí Minh",
+
+    // FIXED: Bình Thuận + Bình Phước
+    "binh thuan": "Bình Thuận",
+    "binh phuoc": "Bình Thuận",
+
+    // FIXED: HCM = Long An + HCM
+    "long an": "Hồ Chí Minh",
     "ho chi minh city": "Hồ Chí Minh",
     "ho chi minh": "Hồ Chí Minh",
-    
+
+    // FIXED: Đồng Nai = Đồng Nai + BRVT + Bình Dương
     "dong nai": "Đồng Nai",
-    "binh phuoc": "Đồng Nai",
-    
-    "tay ninh": "Tây Ninh",
-    "long an": "Tây Ninh",
-    
-    "can tho": "Cần Thơ",
-    "soc trang": "Cần Thơ",
-    "hau giang": "Cần Thơ",
-    
-    "ben tre": "Vĩnh Long",
-    "vinh long": "Vĩnh Long",
-    "tra vinh": "Vĩnh Long",
-    
+    "ba ria - vung tau": "Đồng Nai",
+    "ba ria vung tau": "Đồng Nai",
+    "binh duong": "Đồng Nai",
+
     "tien giang": "Đồng Tháp",
     "dong thap": "Đồng Tháp",
-    
-    "bac lieu": "Cà Mau",
-    "ca mau": "Cà Mau",
-    
+
     "an giang": "An Giang",
-    "kien giang": "An Giang"
+    "kien giang": "An Giang",
+
+    // FIXED: Bạc Liêu = Bạc Liêu + Sóc Trăng
+    "bac lieu": "Bạc Liêu",
+    "soc trang": "Bạc Liêu",
+
+    // FIXED: Cà Mau = Cà Mau + Bến Tre
+    "ca mau": "Cà Mau",
+    "ben tre": "Cà Mau",
+
+    // FIXED: Trà Vinh = Trà Vinh + Vĩnh Long
+    "tra vinh": "Trà Vinh",
+    "vinh long": "Trà Vinh",
+
+    "can tho": "Cần Thơ",
+    "hau giang": "Cần Thơ"
 };
 
 // === HELPER FUNCTIONS ===
