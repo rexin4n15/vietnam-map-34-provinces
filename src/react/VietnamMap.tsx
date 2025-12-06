@@ -250,6 +250,7 @@ const VietnamMap: React.FC<VietnamMapProps> = ({
                 },
                 title: { text: undefined },
                 credits: { enabled: false },
+                accessibility: { enabled: false },
                 mapNavigation: {
                     enabled: showZoomControls,
                     enableDoubleClickZoom: true,
