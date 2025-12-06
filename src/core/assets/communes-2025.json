@@ -3683,7 +3683,7 @@
         ]
     },
     {
-        "matinhBNV": 10,
+        "matinhBNV": "10",
         "matinhTMS": "215",
         "tentinhmoi": "Tỉnh Thái Nguyên",
         "phuongxa": [
@@ -4058,7 +4058,7 @@
         ]
     },
     {
-        "matinhBNV": 11,
+        "matinhBNV": "11",
         "matinhTMS": "209",
         "tentinhmoi": "Tỉnh Lạng Sơn",
         "phuongxa": [
@@ -4325,7 +4325,7 @@
         ]
     },
     {
-        "matinhBNV": 12,
+        "matinhBNV": "12",
         "matinhTMS": "217",
         "tentinhmoi": "Tỉnh Phú Thọ",
         "phuongxa": [
@@ -4924,7 +4924,7 @@
         ]
     },
     {
-        "matinhBNV": 13,
+        "matinhBNV": "13",
         "matinhTMS": "301",
         "tentinhmoi": "Tỉnh Điện Biên",
         "phuongxa": [
@@ -5111,7 +5111,7 @@
         ]
     },
     {
-        "matinhBNV": 14,
+        "matinhBNV": "14",
         "matinhTMS": "302",
         "tentinhmoi": "Tỉnh Lai Châu",
         "phuongxa": [
@@ -5270,7 +5270,7 @@
         ]
     },
     {
-        "matinhBNV": 15,
+        "matinhBNV": "15",
         "matinhTMS": "303",
         "tentinhmoi": "Tỉnh Sơn La",
         "phuongxa": [
@@ -5577,7 +5577,7 @@
         ]
     },
     {
-        "matinhBNV": 16,
+        "matinhBNV": "16",
         "matinhTMS": "401",
         "tentinhmoi": "Tỉnh Thanh Hóa",
         "phuongxa": [
@@ -6248,7 +6248,7 @@
         ]
     },
     {
-        "matinhBNV": 17,
+        "matinhBNV": "17",
         "matinhTMS": "403",
         "tentinhmoi": "Tỉnh Nghệ An",
         "phuongxa": [
@@ -6775,7 +6775,7 @@
         ]
     },
     {
-        "matinhBNV": 18,
+        "matinhBNV": "18",
         "matinhTMS": "405",
         "tentinhmoi": "Tỉnh Hà Tĩnh",
         "phuongxa": [
@@ -7058,7 +7058,7 @@
         ]
     },
     {
-        "matinhBNV": 19,
+        "matinhBNV": "19",
         "matinhTMS": "409",
         "tentinhmoi": "Tỉnh Quảng Trị",
         "phuongxa": [
@@ -7377,7 +7377,7 @@
         ]
     },
     {
-        "matinhBNV": 20,
+        "matinhBNV": "20",
         "matinhTMS": "411",
         "tentinhmoi": "Thành phố Huế",
         "phuongxa": [
@@ -7544,7 +7544,7 @@
         ]
     },
     {
-        "matinhBNV": 21,
+        "matinhBNV": "21",
         "matinhTMS": "501",
         "tentinhmoi": "Tp Đà Nẵng",
         "phuongxa": [
@@ -7927,7 +7927,7 @@
         ]
     },
     {
-        "matinhBNV": 22,
+        "matinhBNV": "22",
         "matinhTMS": "505",
         "tentinhmoi": "Tỉnh Quảng Ngãi",
         "phuongxa": [
@@ -8318,7 +8318,7 @@
         ]
     },
     {
-        "matinhBNV": 23,
+        "matinhBNV": "23",
         "matinhTMS": 511,
         "tentinhmoi": "Tỉnh Khánh Hòa",
         "phuongxa": [
@@ -8585,7 +8585,7 @@
         ]
     },
     {
-        "matinhBNV": 24,
+        "matinhBNV": "24",
         "matinhTMS": "603",
         "tentinhmoi": "Tỉnh Gia Lai",
         "phuongxa": [
@@ -9132,7 +9132,7 @@
         ]
     },
     {
-        "matinhBNV": 25,
+        "matinhBNV": "25",
         "matinhTMS": "605",
         "tentinhmoi": "Tỉnh Đắk Lắk",
         "phuongxa": [
@@ -9547,7 +9547,7 @@
         ]
     },
     {
-        "matinhBNV": 26,
+        "matinhBNV": "26",
         "matinhTMS": "703",
         "tentinhmoi": "Tỉnh Lâm Đồng",
         "phuongxa": [
@@ -10050,7 +10050,7 @@
         ]
     },
     {
-        "matinhBNV": 27,
+        "matinhBNV": "27",
         "matinhTMS": "709",
         "tentinhmoi": "Tỉnh Tây Ninh",
         "phuongxa": [
@@ -10441,7 +10441,7 @@
         ]
     },
     {
-        "matinhBNV": 28,
+        "matinhBNV": "28",
         "matinhTMS": "713",
         "tentinhmoi": "Tỉnh Đồng Nai",
         "phuongxa": [
@@ -10828,7 +10828,7 @@
         ]
     },
     {
-        "matinhBNV": 29,
+        "matinhBNV": "29",
         "matinhTMS": "701",
         "tentinhmoi": "Tp Hồ Chí Minh",
         "phuongxa": [
@@ -11507,7 +11507,7 @@
         ]
     },
     {
-        "matinhBNV": 30,
+        "matinhBNV": "30",
         "matinhTMS": "809",
         "tentinhmoi": "Tỉnh Vĩnh Long",
         "phuongxa": [
@@ -12010,7 +12010,7 @@
         ]
     },
     {
-        "matinhBNV": 31,
+        "matinhBNV": "31",
         "matinhTMS": "803",
         "tentinhmoi": "Tỉnh Đồng Tháp",
         "phuongxa": [
@@ -12425,7 +12425,7 @@
         ]
     },
     {
-        "matinhBNV": 32,
+        "matinhBNV": "32",
         "matinhTMS": "805",
         "tentinhmoi": "Tỉnh An Giang",
         "phuongxa": [
@@ -12840,7 +12840,7 @@
         ]
     },
     {
-        "matinhBNV": 33,
+        "matinhBNV": "33",
         "matinhTMS": "815",
         "tentinhmoi": "Tp Cần Thơ",
         "phuongxa": [
@@ -13259,7 +13259,7 @@
         ]
     },
     {
-        "matinhBNV": 34,
+        "matinhBNV": "34",
         "matinhTMS": "823",
         "tentinhmoi": "Tỉnh Cà Mau",
         "phuongxa": [

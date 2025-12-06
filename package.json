@@ -36,7 +36,9 @@
         "build": "tsup src/index.ts src/core/index.ts src/vanilla/index.ts src/react/index.ts --format cjs,esm --dts",
         "build:umd": "tsup src/index.ts --format iife --global-name VietnamMap --out-dir dist",
         "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
-        "lint": "eslint src --ext .ts,.tsx"
+        "lint": "eslint src --ext .ts,.tsx",
+        "prepare": "npm run build",
+        "semantic-release": "semantic-release"
     },
     "keywords": [
         "vietnam",
@@ -81,7 +83,14 @@
         "@types/react": "^18.2.0",
         "@types/react-dom": "^18.2.0",
         "typescript": "^5.3.0",
-        "tsup": "^8.0.0"
+        "tsup": "^8.0.0",
+        "@semantic-release/changelog": "^6.0.3",
+        "@semantic-release/commit-analyzer": "^11.1.0",
+        "@semantic-release/git": "^10.0.1",
+        "@semantic-release/github": "^9.2.6",
+        "@semantic-release/npm": "^11.0.2",
+        "@semantic-release/release-notes-generator": "^12.1.0",
+        "semantic-release": "^23.0.0"
     },
     "repository": {
         "type": "git",
