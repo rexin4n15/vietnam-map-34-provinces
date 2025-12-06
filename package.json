@@ -57,7 +57,9 @@
     "author": "xdev-asia-labs",
     "license": "MIT",
     "peerDependencies": {
-        "highcharts": "^11.0.0"
+        "highcharts": "^11.0.0",
+        "react": "^18.0.0 || ^19.0.0",
+        "react-dom": "^18.0.0 || ^19.0.0"
     },
     "peerDependenciesMeta": {
         "react": {
@@ -65,32 +67,26 @@
         },
         "react-dom": {
             "optional": true
-        },
-        "highcharts-react-official": {
-            "optional": true
-        },
-        "antd": {
-            "optional": true
         }
     },
-    "optionalDependencies": {
-        "react": "^18.0.0",
-        "react-dom": "^18.0.0",
-        "highcharts-react-official": "^3.0.0",
-        "antd": "^5.0.0"
+    "dependencies": {
+        "highcharts-react-official": "^3.2.1"
     },
     "devDependencies": {
-        "@types/react": "^18.2.0",
-        "@types/react-dom": "^18.2.0",
-        "typescript": "^5.3.0",
-        "tsup": "^8.0.0",
         "@semantic-release/changelog": "^6.0.3",
         "@semantic-release/commit-analyzer": "^11.1.0",
         "@semantic-release/git": "^10.0.1",
         "@semantic-release/github": "^9.2.6",
         "@semantic-release/npm": "^11.0.2",
         "@semantic-release/release-notes-generator": "^12.1.0",
-        "semantic-release": "^23.0.0"
+        "@types/highcharts": "^5.0.44",
+        "@types/react": "^18.2.0",
+        "@types/react-dom": "^18.2.0",
+        "react": "^19.2.1",
+        "react-dom": "^19.2.1",
+        "semantic-release": "^23.0.0",
+        "tsup": "^8.0.0",
+        "typescript": "^5.3.0"
     },
     "repository": {
         "type": "git",
