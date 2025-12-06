@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vietnam Map 34 Provinces - Demo</title>
+    <meta name="description" content="Bản đồ Việt Nam với 34 tỉnh/thành phố mới theo Nghị quyết 60-NQ/TW">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Highcharts -->
+    <script src="https://code.highcharts.com/maps/highmaps.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/drilldown.js"></script>
+    
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            color: #fff;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Header */
+        header {
+            text-align: center;
+            padding: 3rem 0;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #fff, #0ea5e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+        }
+        
+        /* Map Container */
+        .map-section {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        @media (max-width: 1024px) {
+            .map-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .map-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        #map {
+            height: 600px;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #e2e8f0;
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(14, 165, 233, 0.1);
+            border-radius: 0.75rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Selected Province Info */
+        .province-info {
+            display: none;
+        }
+        
+        .province-info.active {
+            display: block;
+        }
+        
+        .province-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .province-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.875rem;
+        }
+        
+        .province-detail:last-child {
+            border-bottom: none;
+        }
+        
+        .province-detail span:first-child {
+            color: #94a3b8;
+        }
+        
+        .province-detail span:last-child {
+            font-weight: 600;
+        }
+        
+        /* Merged From List */
+        .merged-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .merged-tag {
+            background: rgba(14, 165, 233, 0.2);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        /* Province List */
+        .province-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .province-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .province-list-item:hover {
+            background: rgba(14, 165, 233, 0.1);
+        }
+        
+        .province-list-item .name {
+            font-size: 0.875rem;
+        }
+        
+        .province-list-item .value {
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-outline {
+            border: 1px solid var(--border);
+            color: #e2e8f0;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        
+        /* Code Block */
+        .code-block {
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.8rem;
+            color: #e2e8f0;
+        }
+        
+        .code-block .comment {
+            color: #64748b;
+        }
+        
+        .code-block .string {
+            color: #22c55e;
+        }
+        
+        .code-block .keyword {
+            color: #f472b6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <span class="badge">Nghị quyết 60-NQ/TW</span>
+            <h1>🇻🇳 Vietnam Map 34 Provinces</h1>
+            <p class="subtitle">Bản đồ Việt Nam với 34 tỉnh/thành phố mới (hiệu lực 01/07/2025)</p>
+            
+            <div class="btn-group">
+                <a href="https://github.com/xdev-asia-labs/vietnam-map-34-provinces" class="btn btn-outline" target="_blank">
+                    ⭐ GitHub
+                </a>
+                <a href="https://www.npmjs.com/package/@xdev-asia-labs/vietnam-map-34-provinces" class="btn btn-primary" target="_blank">
+                    📦 npm install
+                </a>
+            </div>
+        </header>
+        
+        <div class="map-section">
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+            
+            <div class="sidebar">
+                <div class="card">
+                    <h3>📊 Thống kê</h3>
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">34</div>
+                            <div class="stat-label">Tỉnh mới</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">23</div>
+                            <div class="stat-label">Đã hợp nhất</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">11</div>
+                            <div class="stat-label">Giữ nguyên</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">63</div>
+                            <div class="stat-label">Tỉnh cũ</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card province-info" id="provinceInfo">
+                    <h3>📍 Tỉnh đã chọn</h3>
+                    <div class="province-name" id="provinceName">-</div>
+                    <div class="province-detail">
+                        <span>Mã vùng</span>
+                        <span id="provinceCode">-</span>
+                    </div>
+                    <div class="province-detail">
+                        <span>Giá trị</span>
+                        <span id="provinceValue">-</span>
+                    </div>
+                    <div class="province-detail">
+                        <span>Hợp nhất từ</span>
+                        <span id="provinceMerged">-</span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>📦 Cài đặt</h3>
+                    <div class="code-block">
+                        <span class="comment">// Vanilla JS</span><br>
+                        <span class="keyword">import</span> { createVietnamMap }<br>
+                        &nbsp;&nbsp;<span class="keyword">from</span> <span class="string">'@xdev-asia-labs/vietnam-map-34-provinces/vanilla'</span>;<br><br>
+                        <span class="keyword">const</span> map = createVietnamMap(<span class="string">'#container'</span>);
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            Made with ❤️ by <a href="https://github.com/xdev-asia-labs">xdev-asia-labs</a>
+            &nbsp;•&nbsp;
+            <a href="https://github.com/xdev-asia-labs/vietnam-map-34-provinces">View on GitHub</a>
+        </footer>
+    </div>
+    
+    <script type="module">
+        // Province mapping data (embedded for demo)
+        const PROVINCE_MAPPING = {
+            "ha noi": "Hà Nội", "ha tay": "Hà Nội",
+            "thua thien hue": "Huế", "thua thien - hue": "Huế", "hue": "Huế",
+            "lai chau": "Lai Châu", "dien bien": "Điện Biên", "son la": "Sơn La",
+            "lang son": "Lạng Sơn", "quang ninh": "Quảng Ninh", "thanh hoa": "Thanh Hóa",
+            "nghe an": "Nghệ An", "ha tinh": "Hà Tĩnh", "cao bang": "Cao Bằng",
+            "tuyen quang": "Tuyên Quang", "ha giang": "Tuyên Quang",
+            "lao cai": "Lào Cai", "yen bai": "Lào Cai",
+            "bac kan": "Thái Nguyên", "bac can": "Thái Nguyên", "thai nguyen": "Thái Nguyên",
+            "vinh phuc": "Phú Thọ", "phu tho": "Phú Thọ", "hoa binh": "Phú Thọ",
+            "bac ninh": "Bắc Ninh", "bac giang": "Bắc Ninh",
+            "hung yen": "Hưng Yên", "thai binh": "Hưng Yên",
+            "hai duong": "Hải Phòng", "hai phong": "Hải Phòng",
+            "ha nam": "Ninh Bình", "ninh binh": "Ninh Bình", "nam dinh": "Ninh Bình",
+            "quang binh": "Quảng Trị", "quang tri": "Quảng Trị",
+            "quang nam": "Đà Nẵng", "da nang": "Đà Nẵng",
+            "kon tum": "Quảng Ngãi", "quang ngai": "Quảng Ngãi",
+            "gia lai": "Gia Lai", "binh dinh": "Gia Lai",
+            "ninh thuan": "Khánh Hòa", "khanh hoa": "Khánh Hòa",
+            "lam dong": "Lâm Đồng", "dak nong": "Lâm Đồng", "binh thuan": "Lâm Đồng",
+            "dak lak": "Đắk Lắk", "phu yen": "Đắk Lắk",
+            "ba ria - vung tau": "Hồ Chí Minh", "ba ria vung tau": "Hồ Chí Minh",
+            "binh duong": "Hồ Chí Minh", "ho chi minh": "Hồ Chí Minh",
+            "dong nai": "Đồng Nai", "binh phuoc": "Đồng Nai",
+            "tay ninh": "Tây Ninh", "long an": "Tây Ninh",
+            "can tho": "Cần Thơ", "soc trang": "Cần Thơ", "hau giang": "Cần Thơ",
+            "ben tre": "Vĩnh Long", "vinh long": "Vĩnh Long", "tra vinh": "Vĩnh Long",
+            "tien giang": "Đồng Tháp", "dong thap": "Đồng Tháp",
+            "bac lieu": "Cà Mau", "ca mau": "Cà Mau",
+            "an giang": "An Giang", "kien giang": "An Giang"
+        };
+
+        function normalizeName(str) {
+            if (!str) return "";
+            return str.toLowerCase()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .replace(/đ/g, "d").replace(/Đ/g, "D")
+                .trim();
+        }
+
+        // Load and process map
+        async function initMap() {
+            const response = await fetch('https://raw.githubusercontent.com/xdev-asia-labs/vietnam-map-34-provinces/main/src/core/assets/vn-all.geo.json');
+            const topology = await response.json();
+            
+            // Group features by new province
+            const groupedFeatures = {};
+            topology.features.forEach(f => {
+                const originalName = f.properties.name;
+                const normalized = normalizeName(originalName);
+                let newName = PROVINCE_MAPPING[normalized];
+                
+                if (!newName) {
+                    const foundKey = Object.keys(PROVINCE_MAPPING).find(key => normalized.includes(key));
+                    newName = foundKey ? PROVINCE_MAPPING[foundKey] : originalName;
+                }
+                
+                const newId = `vn-new-${normalizeName(newName).replace(/\s+/g, '-')}`;
+                
+                if (!groupedFeatures[newId]) {
+                    groupedFeatures[newId] = [];
+                }
+                groupedFeatures[newId].push({ feature: f, newName, newId, originalName });
+            });
+            
+            // Create merged features
+            const mergedFeatures = Object.values(groupedFeatures).map(group => {
+                const firstItem = group[0];
+                
+                if (group.length === 1) {
+                    return {
+                        ...firstItem.feature,
+                        properties: {
+                            ...firstItem.feature.properties,
+                            "hc-key": firstItem.newId,
+                            name: firstItem.newName,
+                            "original-names": [firstItem.originalName]
+                        }
+                    };
+                }
+                
+                const mergedCoordinates = [];
+                group.forEach(item => {
+                    const geom = item.feature.geometry;
+                    if (geom.type === 'Polygon') {
+                        mergedCoordinates.push(geom.coordinates);
+                    } else if (geom.type === 'MultiPolygon') {
+                        mergedCoordinates.push(...geom.coordinates);
+                    }
+                });
+                
+                return {
+                    type: "Feature",
+                    properties: {
+                        "hc-key": firstItem.newId,
+                        name: firstItem.newName,
+                        "original-names": group.map(g => g.originalName)
+                    },
+                    geometry: {
+                        type: "MultiPolygon",
+                        coordinates: mergedCoordinates
+                    }
+                };
+            });
+            
+            const processedTopology = { ...topology, features: mergedFeatures };
+            
+            // Generate demo data
+            const mapData = mergedFeatures.map(f => ({
+                "hc-key": f.properties["hc-key"],
+                value: Math.floor(Math.random() * 10000) + 1000,
+                name: f.properties.name,
+                originalNames: f.properties["original-names"]
+            }));
+            
+            // Create chart
+            Highcharts.mapChart('map', {
+                chart: {
+                    map: processedTopology,
+                    backgroundColor: 'transparent',
+                    height: 600
+                },
+                title: { text: null },
+                credits: { enabled: false },
+                mapNavigation: {
+                    enabled: true,
+                    enableDoubleClickZoom: true,
+                    buttonOptions: { verticalAlign: 'bottom' }
+                },
+                colorAxis: {
+                    min: 0,
+                    stops: [
+                        [0, '#E1F5FE'],
+                        [0.4, '#4FC3F7'],
+                        [1, '#01579B']
+                    ]
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                    borderColor: '#334155',
+                    style: { color: '#fff' },
+                    useHTML: true,
+                    headerFormat: '<div style="font-size:14px;font-weight:bold;margin-bottom:8px">{point.key}</div>',
+                    pointFormat: '<div>Giá trị: <b>{point.value:,.0f}</b></div>'
+                },
+                series: [{
+                    type: 'map',
+                    data: mapData,
+                    joinBy: 'hc-key',
+                    borderColor: '#ffffff',
+                    borderWidth: 0.5,
+                    states: {
+                        hover: {
+                            color: '#fbbf24',
+                            borderColor: '#d97706'
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.name}',
+                        style: {
+                            fontSize: '9px',
+                            fontWeight: '500',
+                            textOutline: '2px contrast',
+                            color: '#1e293b'
+                        }
+                    },
+                    point: {
+                        events: {
+                            click: function() {
+                                showProvinceInfo(this);
+                            }
+                        }
+                    }
+                }]
+            });
+        }
+        
+        function showProvinceInfo(point) {
+            const info = document.getElementById('provinceInfo');
+            info.classList.add('active');
+            
+            document.getElementById('provinceName').textContent = point.name;
+            document.getElementById('provinceCode').textContent = point['hc-key'];
+            document.getElementById('provinceValue').textContent = point.value?.toLocaleString() || '-';
+            
+            const originals = point.originalNames || [];
+            document.getElementById('provinceMerged').textContent = 
+                originals.length > 1 ? originals.join(', ') : 'Không hợp nhất';
+        }
+        
+        initMap();
+    </script>
+</body>
+</html>
