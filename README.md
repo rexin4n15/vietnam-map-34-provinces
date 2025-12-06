@@ -1,6 +1,6 @@
 # Vietnam Map - 34 Provinces
 
-[![npm version](https://img.shields.io/npm/v/@xdev-asia-labs/vietnam-map-34-provinces.svg)](https://www.npmjs.com/package/@xdev-asia-labs/vietnam-map-34-provinces)
+[![npm version](https://img.shields.io/npm/v/@xdev-asia/vietnam-map-34-provinces.svg)](https://www.npmjs.com/package/@xdev-asia/vietnam-map-34-provinces)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 React/Vanilla JS component hiển thị bản đồ Việt Nam với **34 tỉnh/thành phố mới** theo **Nghị quyết 60-NQ/TW** (hiệu lực 01/07/2025).
@@ -8,11 +8,11 @@ React/Vanilla JS component hiển thị bản đồ Việt Nam với **34 tỉnh
 ## 📦 Installation
 
 ```bash
-npm install @xdev-asia-labs/vietnam-map-34-provinces highcharts
+npm install @xdev-asia/vietnam-map-34-provinces highcharts
 # or
-yarn add @xdev-asia-labs/vietnam-map-34-provinces highcharts
+yarn add @xdev-asia/vietnam-map-34-provinces highcharts
 # or
-pnpm add @xdev-asia-labs/vietnam-map-34-provinces highcharts
+pnpm add @xdev-asia/vietnam-map-34-provinces highcharts
 ```
 
 ## 🚀 Usage
@@ -20,7 +20,7 @@ pnpm add @xdev-asia-labs/vietnam-map-34-provinces highcharts
 ### Vanilla JavaScript
 
 ```javascript
-import { createVietnamMap } from '@xdev-asia-labs/vietnam-map-34-provinces/vanilla';
+import { createVietnamMap } from '@xdev-asia/vietnam-map-34-provinces/vanilla';
 
 const map = createVietnamMap('#container', {
   onProvinceClick: (province) => {
@@ -45,7 +45,7 @@ map.updateData([
 ### React
 
 ```tsx
-import { VietnamMap } from '@xdev-asia-labs/vietnam-map-34-provinces/react';
+import { VietnamMap } from '@xdev-asia/vietnam-map-34-provinces/react';
 
 function App() {
   return (
@@ -67,7 +67,7 @@ function App() {
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-import { createVietnamMap } from '@xdev-asia-labs/vietnam-map-34-provinces/vanilla';
+import { createVietnamMap } from '@xdev-asia/vietnam-map-34-provinces/vanilla';
 
 const mapContainer = ref(null);
 let mapInstance = null;
@@ -90,7 +90,7 @@ onUnmounted(() => {
 
 ```typescript
 import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
-import { createVietnamMap, VietnamMapInstance } from '@xdev-asia-labs/vietnam-map-34-provinces/vanilla';
+import { createVietnamMap, VietnamMapInstance } from '@xdev-asia/vietnam-map-34-provinces/vanilla';
 
 @Component({
   selector: 'app-vietnam-map',
@@ -116,7 +116,7 @@ export class VietnamMapComponent implements AfterViewInit, OnDestroy {
 
 ```html
 <script src="https://code.highcharts.com/maps/highmaps.js"></script>
-<script src="https://unpkg.com/@xdev-asia-labs/vietnam-map-34-provinces/dist/index.umd.js"></script>
+<script src="https://unpkg.com/@xdev-asia/vietnam-map-34-provinces/dist/index.umd.js"></script>
 
 <div id="map" style="height: 600px"></div>
 
@@ -135,7 +135,7 @@ import {
   getProvinceByName,
   NEW_34_PROVINCES,
   vietnamGeoJson 
-} from '@xdev-asia-labs/vietnam-map-34-provinces/core';
+} from '@xdev-asia/vietnam-map-34-provinces/core';
 
 // Convert old province name to new
 const newName = getNewProvinceName('Hà Giang'); // => "Tuyên Quang"
