@@ -1,8 +1,10 @@
 import type { NextConfig } from "next";
 
+const isProd = process.env.NODE_ENV === "production";
+
 const nextConfig: NextConfig = {
   output: "export",
-  basePath: "/vietnam-map-34-provinces",
+  basePath: isProd ? "/vietnam-map-34-provinces" : undefined,
   images: {
     unoptimized: true,
   },
