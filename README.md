@@ -2,8 +2,11 @@
 
 [![npm version](https://img.shields.io/npm/v/@xdev-asia/vietnam-map-34-provinces.svg)](https://www.npmjs.com/package/@xdev-asia/vietnam-map-34-provinces)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Demo](https://img.shields.io/badge/Demo-Live-green.svg)](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/)
 
 React/Vanilla JS component hiển thị bản đồ Việt Nam với **34 tỉnh/thành phố mới** theo **Nghị quyết 60-NQ/TW** (hiệu lực 01/07/2025).
+
+**🔗 [Live Demo](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/)**
 
 ## 📦 Installation
 
