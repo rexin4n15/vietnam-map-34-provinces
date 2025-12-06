@@ -26,23 +26,63 @@ pnpm add @xdev-asia/vietnam-map-34-provinces highcharts
 import { createVietnamMap } from '@xdev-asia/vietnam-map-34-provinces/vanilla';
 
 const map = createVietnamMap('#container', {
-  onProvinceClick: (province) => {
-    console.log('Clicked:', province.name);
+  // === DRILLDOWN (click vào tỉnh để xem xã/phường) ===
+  drilldown: {
+    enabled: true,
+    onDrilldown: (province) => console.log('Viewing:', province.name),
+    onDrillup: () => console.log('Back to country'),
+    onLoading: (loading) => showSpinner(loading)
   },
-  height: 600
+  
+  // === CALLBACKS ===
+  onProvinceClick: (province) => console.log('Clicked:', province),
+  onProvinceHover: (province) => updateTooltip(province),
+  onCommuneClick: (commune) => console.log('Commune:', commune),
+  onReady: (instance) => console.log('Map ready!'),
+  
+  // === APPEARANCE ===
+  height: 600,
+  backgroundColor: 'transparent',
+  colors: {
+    min: '#E1F5FE',
+    max: '#01579B',
+    stops: [[0, '#E1F5FE'], [0.5, '#4FC3F7'], [1, '#01579B']]
+  },
+  style: {
+    borderColor: '#ffffff',
+    borderWidth: 0.5,
+    hoverColor: '#fbbf24',
+    hoverBorderColor: '#d97706'
+  },
+  dataLabels: {
+    enabled: true,
+    fontSize: '10px',
+    color: '#1e293b'
+  },
+  tooltip: {
+    enabled: true,
+    backgroundColor: 'rgba(255,255,255,0.95)',
+    formatter: (point) => `<b>${point.name}</b>: ${point.value}`
+  },
+  
+  // === DATA ===
+  data: [
+    { 'hc-key': 'vn-new-ha-noi', value: 5000, customField: 'abc' },
+    { 'hc-key': 'vn-new-ho-chi-minh', value: 8000 }
+  ],
+  
+  // === NAVIGATION ===
+  navigation: true,
+  doubleClickZoom: true
 });
 
-// Zoom to a specific province
+// Methods
 map.zoomToProvince('vn-new-ha-noi');
-
-// Reset zoom
 map.resetZoom();
-
-// Update data
-map.updateData([
-  { 'hc-key': 'vn-new-ha-noi', value: 5000 },
-  { 'hc-key': 'vn-new-ho-chi-minh', value: 8000 }
-]);
+map.updateData([...]);
+map.drilldownTo('Hà Nội');
+map.drillUp();
+map.destroy();
 ```
 
 ### React
