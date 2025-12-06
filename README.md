@@ -10,6 +10,12 @@ Interactive map component hiển thị bản đồ Việt Nam với **34 tỉnh/
 
 **🔗 [Live Demo](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/)** | **📖 [Documentation](https://xdev-asia-labs.github.io/vietnam-map-34-provinces/docs/vanilla.html)**
 
+## 🖼️ Showcase
+
+| Bản đồ tổng quan | Drilldown cấp xã | Tùy chọn màu sắc |
+|:---:|:---:|:---:|
+| ![Bản đồ tổng quan](show-case-01.png) | ![Drilldown cấp xã](show-case-02.png) | ![Tùy chọn màu sắc](show-case-03.png) |
+
 ## ✨ Highlights
 
 - 🗺️ **34 tỉnh/TP mới** (6 TP trực thuộc TW + 28 tỉnh)

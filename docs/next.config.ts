@@ -1,13 +1,14 @@
 import type { NextConfig } from "next";
 
-const isProd = process.env.NODE_ENV === "production";
-
 const nextConfig: NextConfig = {
   output: "export",
-  basePath: isProd ? "/vietnam-map-34-provinces" : undefined,
+  // Remove basePath when using custom domain at root
+  // basePath: "/vietnam-map-34-provinces",
   images: {
     unoptimized: true,
   },
+  // Disable trailing slash for cleaner URLs
+  trailingSlash: false,
 };
 
 export default nextConfig;
