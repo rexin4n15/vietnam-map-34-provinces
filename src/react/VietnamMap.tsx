@@ -2,14 +2,14 @@ import React, { useEffect, useState, useRef } from "react";
 import Highcharts from "highcharts/highmaps";
 import HighchartsReact from "highcharts-react-official";
 import HighchartsDrilldown from "highcharts/modules/drilldown";
-import { message, Button } from "antd";
-import { ReloadOutlined } from "@ant-design/icons";
 import vnMapData from "../core/assets/vn-all.geo.json";
 import { PROVINCE_MAPPING, normalizeName } from "../core/provinceMapping";
 
 // Initialize drilldown module safely
-if (typeof Highcharts === 'object') {
-    if (!(Highcharts as any).Drilldown) {
+// Ensure this runs on the client side
+if (typeof window !== 'undefined' && typeof Highcharts === 'object') {
+    if (!(Highcharts as any).Drilldown && !(Highcharts as any).seriesTypes?.mapline?.prototype?.drillTo) {
+        // Double check various indicators of drilldown presence
         if (typeof HighchartsDrilldown === 'function') {
             HighchartsDrilldown(Highcharts);
         } else if (typeof (HighchartsDrilldown as any)?.default === 'function') {
@@ -19,22 +19,39 @@ if (typeof Highcharts === 'object') {
 }
 
 export interface VietnamMapProps {
+    /** Map height in pixels */
+    height?: number | string;
+    /** Data to display on the map */
     data?: any[];
+    /** Color axis configuration */
+    colorAxis?: Highcharts.ColorAxisOptions;
+    /** Callback when a province is clicked */
+    onProvinceClick?: (province: any) => void;
+    /** Show zoom control buttons */
+    showZoomControls?: boolean;
+    /** Custom options to override Highcharts config */
+    options?: Highcharts.Options;
 }
 
-const VietnamMap: React.FC<VietnamMapProps> = () => {
+const VietnamMap: React.FC<VietnamMapProps> = ({
+    height = 600,
+    data,
+    colorAxis,
+    onProvinceClick,
+    showZoomControls = true,
+    options: customOptions
+}) => {
     const chartRef = useRef<HighchartsReact.RefObject>(null);
     const [mapOptions, setMapOptions] = useState<Highcharts.Options | null>(null);
     const [topology, setTopology] = useState<any>(null);
-    const [, setMergedProvincesData] = useState<any[]>([]);
-    const [, setSelectedProvince] = useState<string | null>(null);
+    // Track if drilldown is in progress to prevent React from re-rendering the chart
+    const isDrillingRef = useRef<boolean>(false);
 
     useEffect(() => {
         try {
             setTopology(vnMapData);
         } catch (error) {
             console.error("Error loading map data:", error);
-            message.error("Không thể tải dữ liệu bản đồ");
         }
     }, []);
 
@@ -82,7 +99,7 @@ const VietnamMap: React.FC<VietnamMapProps> = () => {
                 const newName = firstItem.newName;
                 const newId = firstItem.newId;
 
-                // If only one feature in group, just return it with updated properties
+                // If only one feature in group
                 if (group.length === 1) {
                     return {
                         ...firstItem.feature,
@@ -95,9 +112,8 @@ const VietnamMap: React.FC<VietnamMapProps> = () => {
                     };
                 }
 
-                // If multiple features, merge their geometries into a MultiPolygon
+                // If multiple features, merge their geometries
                 const mergedCoordinates: any[] = [];
-
                 group.forEach(item => {
                     const geom = item.feature.geometry;
                     if (geom.type === 'Polygon') {
@@ -127,76 +143,162 @@ const VietnamMap: React.FC<VietnamMapProps> = () => {
                 features: mergedFeatures
             };
 
-            // Generate data for the 34 NEW provinces
-            const newMapData = mergedFeatures.map((f: any) => {
-                const id = f.properties["hc-key"];
-                const name = f.properties["name"];
+            // Use provided data or generate minimal default data
+            const mapData = data || mergedFeatures.map((f: any) => ({
+                "hc-key": f.properties["hc-key"],
+                id: f.properties["hc-key"], // Ensure ID is set for retrieval
+                drilldown: f.properties["hc-key"].replace("vn-new-", ""), // Use slug for filename
+                value: Math.floor(Math.random() * 100),
+                name: f.properties["name"]
+            }));
 
-                // Mock data
-                const subjects = Math.floor(Math.random() * 10000) + 1000;
-                return {
-                    "hc-key": id,
-                    value: subjects,
-                    name: name,
-                    facilities: Math.floor(Math.random() * 50) + 5,
-                    socialWorkers: Math.floor(Math.random() * 500) + 50,
-                    subjects: subjects,
-                };
-            }).sort((a, b) => a.name.localeCompare(b.name));
-
-            setMergedProvincesData(newMapData);
-
-            const options: Highcharts.Options = {
+            const defaultOptions: Highcharts.Options = {
                 chart: {
                     map: processedTopology,
                     backgroundColor: 'transparent',
-                    height: 650,
+                    height: height,
                     style: { fontFamily: 'inherit' },
+                    events: {
+                        drilldown: async function (e: any) {
+                            if (!e.seriesOptions) {
+                                const chart = this as any;
+                                const originalPoint = e.point;
+                                const provinceSlug = originalPoint.drilldown;
+
+                                // Lock to prevent React from re-rendering the chart during async load
+                                isDrillingRef.current = true;
+
+                                chart.showLoading('<div style="font-family: inherit"><i class="fas fa-spinner fa-spin"></i> Đang tải bản đồ ' + originalPoint.name + '...</div>');
+
+                                try {
+                                    // Dynamic import of province JSON
+                                    // Webpack/Next.js requires the path to be static-analyzable to some extent
+                                    const mapData = await import(`../core/assets/provinces/${provinceSlug}.json`);
+
+                                    // Safety check: if chart was destroyed during await
+                                    if (!chart || !chart.renderer) return;
+
+                                    const features = mapData.features || mapData.default?.features || [];
+
+                                    // Generate data for the drilldown series
+                                    const seriesData = features.map((f: any) => ({
+                                        key: f.properties.GID_3 || f.properties.ID || Math.random().toString(), // Use GID_3 as ID
+                                        name: f.properties.NAME_3, // Commune name
+                                        value: Math.floor(Math.random() * 1000),
+                                        properties: f.properties
+                                    }));
+
+                                    // Re-fetch the point from the chart to ensure it's valid (in case of re-renders)
+                                    // If point has an ID, use get(), otherwise fallback to originalPoint (risky but best effort)
+                                    const currentPoint = (originalPoint.id && chart.get(originalPoint.id)) || originalPoint;
+
+                                    // CRITICAL: Validate that the point is still attached to a series
+                                    // After React re-renders, the point's series may become null/undefined
+                                    if (!currentPoint || !currentPoint.series) {
+                                        console.warn("Drilldown point became invalid after async load. Chart may have been re-rendered.");
+                                        chart.hideLoading();
+                                        return;
+                                    }
+
+                                    // Check if drilldown capabilities exist on the chart
+                                    if (chart.addSeriesAsDrilldown) {
+                                        chart.addSeriesAsDrilldown(currentPoint, {
+                                            name: currentPoint.name,
+                                            data: seriesData,
+                                            mapData: mapData.default || mapData,
+                                            joinBy: ['GID_3', 'key'], // Join by GID_3 property in GeoJSON and key in data
+                                            borderColor: '#ffffff',
+                                            borderWidth: 0.5,
+                                            states: {
+                                                hover: {
+                                                    color: '#fbbf24',
+                                                    borderColor: '#d97706',
+                                                }
+                                            },
+                                            tooltip: {
+                                                headerFormat: '<div style="font-size: 14px; font-weight: bold; color: #0f172a; margin-bottom: 4px;">{point.key}</div>',
+                                                pointFormat: '<div style="color: #64748b;">{point.properties.TYPE_3} {point.name}</div>'
+                                            },
+                                            dataLabels: {
+                                                enabled: false, // Disable labels for communes by default to avoid clutter
+                                                format: '{point.name}'
+                                            }
+                                        });
+                                    } else {
+                                        console.error("Drilldown module is not loaded or chart does not support it.");
+                                        chart.showLoading('Lỗi: Drilldown module chưa được tải.');
+                                    }
+                                } catch (error) {
+                                    console.error("Failed to load drilldown map:", error);
+                                    if (chart && chart.showLoading) {
+                                        chart.showLoading('Không tìm thấy dữ liệu bản đồ chi tiết.');
+                                        setTimeout(() => chart.hideLoading && chart.hideLoading(), 2000);
+                                    }
+                                } finally {
+                                    // Release the drilling lock
+                                    isDrillingRef.current = false;
+                                    if (chart && chart.hideLoading) {
+                                        chart.hideLoading();
+                                    }
+                                }
+                            }
+                        }
+                    }
                 },
                 title: { text: undefined },
+                credits: { enabled: false },
                 mapNavigation: {
-                    enabled: true,
+                    enabled: showZoomControls,
                     enableDoubleClickZoom: true,
                     buttonOptions: { verticalAlign: 'bottom' }
                 },
-                colorAxis: {
+                drilldown: {
+                    activeDataLabelStyle: {
+                        color: 'white',
+                        textDecoration: 'none'
+                    },
+                    drillUpButton: {
+                        relativeTo: 'spacingBox',
+                        position: {
+                            y: 0,
+                            x: 0
+                        },
+                        theme: {
+                            fill: 'white',
+                            'stroke-width': 1,
+                            stroke: 'silver',
+                            r: 0,
+                            states: {
+                                hover: {
+                                    fill: '#f1f5f9'
+                                },
+                                select: {
+                                    stroke: '#039',
+                                    fill: '#f1f5f9'
+                                }
+                            }
+                        }
+                    }
+                },
+                colorAxis: colorAxis || {
                     min: 0,
-                    stops: [
-                        [0, '#E1F5FE'],
-                        [0.4, '#4FC3F7'],
-                        [1, '#01579B']
-                    ],
                     minColor: '#E1F5FE',
                     maxColor: '#01579B',
                 },
                 tooltip: {
-                    backgroundColor: 'rgba(255, 255, 255, 0.98)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
                     borderColor: '#e2e8f0',
-                    borderRadius: 12,
-                    padding: 16,
+                    borderRadius: 8,
+                    padding: 12,
+                    shadow: true,
                     useHTML: true,
-                    headerFormat: '<div style="font-size: 16px; font-weight: bold; color: #0f172a; margin-bottom: 12px; border-bottom: 2px solid #0ea5e9; padding-bottom: 8px;">{point.key}</div>',
-                    pointFormat: `
-                        <div style="display: flex; flex-direction: column; gap: 8px; min-width: 220px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 8px; rounded: 6px;">
-                                <span style="color: #64748b; font-weight: 500;">👨‍👩‍👧‍👦 Đối tượng TGXH:</span>
-                                <b style="color: #0284c7; font-size: 16px;">{point.subjects}</b>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 8px;">
-                                <span style="color: #64748b;">🏛 Cơ sở TGXH:</span>
-                                <b style="color: #334155;">{point.facilities}</b>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 8px;">
-                                <span style="color: #64748b;">👥 Người làm CTXH:</span>
-                                <b style="color: #334155;">{point.socialWorkers}</b>
-                            </div>
-                        </div>
-                    `
+                    headerFormat: '<div style="font-size: 14px; font-weight: bold; color: #0f172a; margin-bottom: 4px;">{point.key}</div>',
+                    pointFormat: '<div style="color: #64748b;">Value: <b style="color: #0284c7;">{point.value}</b></div>'
                 },
                 series: [{
                     type: 'map',
-                    name: 'Số liệu CTXH',
-                    data: newMapData,
+                    name: 'Vietnam',
+                    data: mapData,
                     joinBy: 'hc-key',
                     allAreas: false,
                     borderColor: '#ffffff',
@@ -205,7 +307,6 @@ const VietnamMap: React.FC<VietnamMapProps> = () => {
                         hover: {
                             color: '#fbbf24',
                             borderColor: '#d97706',
-                            brightness: 0.1
                         },
                         select: {
                             color: '#fbbf24',
@@ -215,6 +316,8 @@ const VietnamMap: React.FC<VietnamMapProps> = () => {
                     dataLabels: {
                         enabled: true,
                         format: '{point.name}',
+                        allowOverlap: true,
+                        crop: false,
                         style: {
                             fontSize: '10px',
                             fontWeight: '500',
@@ -226,62 +329,41 @@ const VietnamMap: React.FC<VietnamMapProps> = () => {
                         events: {
                             click: function () {
                                 const point = this as any;
-                                handleProvinceClick(point["hc-key"]);
+                                if (onProvinceClick) {
+                                    onProvinceClick({
+                                        name: point.name,
+                                        code: point["hc-key"],
+                                        value: point.value,
+                                        ...point.properties
+                                    });
+                                }
                             }
                         }
                     }
                 }]
             };
 
-            setMapOptions(options);
-        }
-    }, [topology]);
-
-    const handleProvinceClick = (provinceId: string) => {
-        setSelectedProvince(provinceId);
-        if (chartRef.current && chartRef.current.chart) {
-            const chart = chartRef.current.chart;
-            const point = chart.get(provinceId) as any;
-            if (point) {
-                point.zoomTo();
-                point.select(true, false);
+            // Only update options if not in the middle of a drilldown
+            if (!isDrillingRef.current) {
+                setMapOptions({ ...defaultOptions, ...customOptions });
             }
         }
-    };
-
-    const handleResetZoom = () => {
-        if (chartRef.current && chartRef.current.chart) {
-            chartRef.current.chart.mapZoom(1);
-            setSelectedProvince(null);
-            (chartRef.current.chart.series[0] as any).points.forEach((p: any) => p.select(false));
-        }
-    };
+    }, [topology, data, height, colorAxis, showZoomControls, onProvinceClick, customOptions]);
 
     return (
-        <div className="h-full w-full">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 relative h-full">
-                <div className="absolute top-4 right-4 z-10">
-                    <Button
-                        icon={<ReloadOutlined />}
-                        onClick={handleResetZoom}
-                        size="small"
-                    >
-                        Đặt lại
-                    </Button>
+        <div className="w-full relative">
+            {mapOptions ? (
+                <HighchartsReact
+                    highcharts={Highcharts}
+                    constructorType={"mapChart"}
+                    options={mapOptions}
+                    ref={chartRef}
+                />
+            ) : (
+                <div className="flex items-center justify-center text-gray-400" style={{ height }}>
+                    Loading map...
                 </div>
-                {mapOptions ? (
-                    <HighchartsReact
-                        highcharts={Highcharts}
-                        constructorType={"mapChart"}
-                        options={mapOptions}
-                        ref={chartRef}
-                    />
-                ) : (
-                    <div className="h-[600px] flex items-center justify-center text-gray-400">
-                        Đang tải bản đồ...
-                    </div>
-                )}
-            </div>
+            )}
         </div>
     );
 };

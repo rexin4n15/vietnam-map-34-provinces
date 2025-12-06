@@ -14,10 +14,10 @@ export default function ReactDocsPage() {
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-linear-to-r from-white to-slate-400">
-            React Integration
+            Tích hợp React
           </h1>
           <p className="text-xl text-slate-400 max-w-2xl leading-relaxed">
-            Complete guide to using the Vietnam Map component in your React applications with full type safety and hooks support.
+            Hướng dẫn đầy đủ cách sử dụng component Bản đồ Việt Nam trong ứng dụng React với đầy đủ type safety và hỗ trợ hooks.
           </p>
         </header>
 
@@ -26,18 +26,18 @@ export default function ReactDocsPage() {
           <section id="installation" className="scroll-mt-24">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
               <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-sky-500/10 text-sky-400 text-sm font-mono">01</span>
-              Installation
+              Cài đặt
             </h2>
             <div className="bg-slate-900/50 border border-white/10 rounded-xl p-6 backdrop-blur-sm">
               <CodeBlock
                 language="bash"
                 code={`npm install @xdev-asia/vietnam-map-34-provinces highcharts highcharts-react-official`}
               />
-              <div className="mt-4 p-4 rounded-lg bg-sky-500/10 border border-sky-500/10 text-sky-200/80 text-sm flex gap-3">
-                <svg className="w-5 h-5 flex-shrink-0 text-sky-400" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
+              <div className="mt-4 p-4 rounded-lg bg-green-500/10 border border-green-500/10 text-green-200/80 text-sm flex gap-3">
+                <svg className="w-5 h-5 flex-shrink-0 text-green-400" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
                 <p>
-                  This library requires <code>highcharts</code> and <code>highcharts-react-official</code> as peer dependencies.
-                  Make sure you have React 18 or later installed.
+                  Thư viện yêu cầu <code>highcharts</code> và <code>highcharts-react-official</code> là peer dependencies.
+                  Đảm bảo bạn đã cài đặt React 18 trở lên.
                 </p>
               </div>
             </div>
@@ -47,17 +47,17 @@ export default function ReactDocsPage() {
           <section id="usage" className="scroll-mt-24">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
               <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-sky-500/10 text-sky-400 text-sm font-mono">02</span>
-              Basic Usage
+              Sử dụng Cơ bản
             </h2>
             <div className="grid lg:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <p className="text-slate-400 leading-relaxed">
-                  Import the <code>VietnamMap</code> component and place it in your app.
-                  The map automatically handles the 34 provinces topology and loading states.
+                  Import component <code>VietnamMap</code> và đặt vào ứng dụng của bạn.
+                  Bản đồ tự động xử lý topology 34 tỉnh thành và trạng thái loading.
                 </p>
                 <ul className="space-y-2 text-sm text-slate-400">
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-sky-400"></span>Responsive height/width</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-sky-400"></span>Auto-fit container</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-sky-400"></span>Responsive chiều cao/chiều rộng</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-sky-400"></span>Tự động fill container</li>
                 </ul>
               </div>
               <div className="bg-slate-900/50 border border-white/10 rounded-xl overflow-hidden backdrop-blur-sm">
@@ -82,7 +82,7 @@ export default function App() {
           <section id="props" className="scroll-mt-24">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
               <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-sky-500/10 text-sky-400 text-sm font-mono">03</span>
-              Interactive Props
+              Tương tác & Props
             </h2>
             <div className="bg-slate-900/50 border border-white/10 rounded-xl p-1 backdrop-blur-sm">
               <CodeBlock
@@ -98,7 +98,7 @@ function InteractiveMap() {
         { 'hc-key': 'vn-new-ho-chi-minh', value: 8000 }
       ]}
       onProvinceClick={(province) => {
-        console.log('Selected:', province.name);
+        console.log('Đã chọn:', province.name);
       }}
       colorAxis={{
         minColor: '#e0f2fe',
@@ -119,10 +119,10 @@ function InteractiveMap() {
             </h2>
             <div className="grid gap-6">
               <div className="p-6 bg-slate-900/50 border border-white/10 rounded-xl backdrop-blur-sm">
-                <h3 className="text-lg font-semibold text-white mb-4">Accessing Data directly</h3>
+                <h3 className="text-lg font-semibold text-white mb-4">Truy xuất Dữ liệu trực tiếp</h3>
                 <p className="text-slate-400 mb-4">
-                  You can access raw province and commune data using our core utilities.
-                  This is useful for building search interfaces or custom lists.
+                  Bạn có thể truy xuất dữ liệu thô của tỉnh và xã thông qua các tiện ích core.
+                  Hữu ích để xây dựng giao diện tìm kiếm hoặc danh sách tùy chỉnh.
                 </p>
                 <CodeBlock
                   language="tsx"
@@ -132,15 +132,15 @@ function InteractiveMap() {
   NEW_34_PROVINCES 
 } from '@xdev-asia/vietnam-map-34-provinces/core';
 
-// 1. Get stats
+// 1. Lấy thống kê
 const stats = getProvinceStats();
-console.log(\`Total Communes: \${stats.totalCommunes}\`);
+console.log(\`Tổng số xã: \${stats.totalCommunes}\`);
 
-// 2. Search for a commune
+// 2. Tìm kiếm xã phường
 const results = searchCommunes('Ba Đình');
 
-// 3. List all provinces
-const hcm = NEW_34_PROVINCES.find(p => p.code === '29'); // HCM Code`}
+// 3. Danh sách tất cả tỉnh thành
+const hcm = NEW_34_PROVINCES.find(p => p.code === '29'); // Mã TP.HCM Mới`}
                 />
               </div>
             </div>
@@ -156,17 +156,17 @@ const hcm = NEW_34_PROVINCES.find(p => p.code === '29'); // HCM Code`}
                     <th className="py-4 px-6">Prop</th>
                     <th className="py-4 px-6">Type</th>
                     <th className="py-4 px-6">Default</th>
-                    <th className="py-4 px-6">Description</th>
+                    <th className="py-4 px-6">Mô tả</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {[
-                    { prop: "data", type: "array", def: "[]", desc: "Array of data points matching 'hc-key'" },
-                    { prop: "height", type: "number | string", def: "500", desc: "Height of the map container" },
-                    { prop: "showLabels", type: "boolean", def: "true", desc: "Toggle data labels for provinces" },
-                    { prop: "showZoomControls", type: "boolean", def: "true", desc: "Show Highcharts zoom buttons" },
-                    { prop: "onProvinceClick", type: "(p) => void", def: "-", desc: "Callback when a province is clicked" },
-                    { prop: "colorAxis", type: "object", def: "-", desc: "Highcharts colorAxis configuration" },
+                    { prop: "data", type: "array", def: "[]", desc: "Mảng dữ liệu khớp với 'hc-key'" },
+                    { prop: "height", type: "number | string", def: "600", desc: "Chiều cao của container bản đồ" },
+                    { prop: "showZoomControls", type: "boolean", def: "true", desc: "Hiển thị nút zoom +/-" },
+                    { prop: "onProvinceClick", type: "(p) => void", def: "-", desc: "Callback khi click vào tỉnh" },
+                    { prop: "colorAxis", type: "object", def: "-", desc: "Cấu hình dải màu Highcharts" },
+                    { prop: "options", type: "object", def: "-", desc: "Ghi đè cấu hình Highcharts gốc" },
                   ].map((row, i) => (
                     <tr key={i} className="hover:bg-white/5 transition-colors">
                       <td className="py-4 px-6 font-mono text-sky-300">{row.prop}</td>

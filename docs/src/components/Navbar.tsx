@@ -4,9 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
-    { href: "/", label: "Home" },
-    { href: "/docs/react", label: "Documentation" },
-    { href: "/provinces", label: "34 Provinces Data" },
+    { href: "/", label: "Trang chủ" },
+    { href: "/demo", label: "Demo" },
+    { href: "/docs/react", label: "Tài liệu" },
+    { href: "/provinces", label: "Dữ liệu 34 Tỉnh" },
 ];
 
 export function Navbar() {
@@ -31,8 +32,8 @@ export function Navbar() {
                             key={item.href}
                             href={item.href}
                             className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${pathname === item.href
-                                    ? "bg-white/10 text-white shadow-inner"
-                                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                                ? "bg-white/10 text-white shadow-inner"
+                                : "text-slate-400 hover:text-white hover:bg-white/5"
                                 }`}
                         >
                             {item.label}
