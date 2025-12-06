@@ -1,13 +1,19 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useMemo } from "react";
 import { CodeBlock } from "@/components/CodeBlock";
 
 const VietnamMap = dynamic(
     () => import("@xdev-asia/vietnam-map-34-provinces/react").then((mod) => mod.VietnamMap),
     { ssr: false, loading: () => <div className="h-[600px] bg-slate-900 animate-pulse rounded-xl" /> }
 );
+
+const DEFAULT_TOOLTIP = `<div style="padding: 8px;">
+  <div style="font-size: 16px; font-weight: bold; margin-bottom: 8px;">📍 {name}</div>
+  <div style="font-size: 12px;">Mã: <b style="color: #0ea5e9;">{code}</b></div>
+  <div style="font-size: 12px;">Giá trị: <b style="color: #10b981;">{value}</b></div>
+</div>`;
 
 export default function DemoPage() {
     const [selected, setSelected] = useState<any>(null);
@@ -19,6 +25,7 @@ export default function DemoPage() {
     const [mapHeight, setMapHeight] = useState(600);
     const [hoverColor, setHoverColor] = useState("#fbbf24");
     const [useCustomTooltip, setUseCustomTooltip] = useState(false);
+    const [tooltipTemplate, setTooltipTemplate] = useState(DEFAULT_TOOLTIP);
 
     const handleProvinceClick = useCallback((province: any) => {
         setSelected(province);
@@ -31,22 +38,16 @@ export default function DemoPage() {
         }
     }, []);
 
-    // Custom tooltip formatter
-    const tooltipFormatter = useCallback((point: any) => {
-        return `
-            <div style="padding: 8px;">
-                <div style="font-size: 16px; font-weight: bold; color: #0f172a; margin-bottom: 8px;">
-                    📍 ${point.name}
-                </div>
-                <div style="color: #64748b; font-size: 12px;">
-                    Mã: <span style="color: #0ea5e9; font-weight: 600;">${point.code?.replace("vn-new-", "").toUpperCase()}</span>
-                </div>
-                <div style="color: #64748b; font-size: 12px; margin-top: 4px;">
-                    Giá trị: <span style="color: #10b981; font-weight: 600;">${point.value?.toLocaleString() || 'N/A'}</span>
-                </div>
-            </div>
-        `;
-    }, []);
+    // Custom tooltip formatter with template
+    const tooltipFormatter = useMemo(() => {
+        if (!useCustomTooltip) return undefined;
+        return (point: any) => {
+            return tooltipTemplate
+                .replace(/{name}/g, point.name || '')
+                .replace(/{code}/g, point.code?.replace("vn-new-", "").toUpperCase() || '')
+                .replace(/{value}/g, point.value?.toLocaleString() || 'N/A');
+        };
+    }, [useCustomTooltip, tooltipTemplate]);
 
     return (
         <div className="min-h-screen bg-[url('/grid.svg')] bg-fixed pt-24 pb-12">
@@ -71,7 +72,7 @@ export default function DemoPage() {
                             showLabels={showLabels}
                             showZoomControls={showZoomControls}
                             hoverColor={hoverColor}
-                            tooltipFormatter={useCustomTooltip ? tooltipFormatter : undefined}
+                            tooltipFormatter={tooltipFormatter}
                             onProvinceClick={handleProvinceClick}
                             colorAxis={{
                                 minColor: "#1e293b",
@@ -101,9 +102,7 @@ export default function DemoPage() {
                             <div className="space-y-4">
                                 {/* Show Labels */}
                                 <label className="flex items-center justify-between cursor-pointer group">
-                                    <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
-                                        Hiển thị tên tỉnh
-                                    </span>
+                                    <span className="text-sm text-slate-300 group-hover:text-white transition-colors">Hiển thị tên tỉnh</span>
                                     <button
                                         onClick={() => setShowLabels(!showLabels)}
                                         className={`relative w-11 h-6 rounded-full transition-colors ${showLabels ? 'bg-sky-500' : 'bg-slate-600'}`}
@@ -114,9 +113,7 @@ export default function DemoPage() {
 
                                 {/* Show Zoom */}
                                 <label className="flex items-center justify-between cursor-pointer group">
-                                    <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
-                                        Nút zoom (+/-)
-                                    </span>
+                                    <span className="text-sm text-slate-300 group-hover:text-white transition-colors">Nút zoom (+/-)</span>
                                     <button
                                         onClick={() => setShowZoomControls(!showZoomControls)}
                                         className={`relative w-11 h-6 rounded-full transition-colors ${showZoomControls ? 'bg-sky-500' : 'bg-slate-600'}`}
@@ -125,11 +122,9 @@ export default function DemoPage() {
                                     </button>
                                 </label>
 
-                                {/* Custom Tooltip */}
+                                {/* Custom Tooltip Toggle */}
                                 <label className="flex items-center justify-between cursor-pointer group">
-                                    <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
-                                        Custom tooltip
-                                    </span>
+                                    <span className="text-sm text-slate-300 group-hover:text-white transition-colors">Custom tooltip</span>
                                     <button
                                         onClick={() => setUseCustomTooltip(!useCustomTooltip)}
                                         className={`relative w-11 h-6 rounded-full transition-colors ${useCustomTooltip ? 'bg-sky-500' : 'bg-slate-600'}`}
@@ -137,6 +132,29 @@ export default function DemoPage() {
                                         <span className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow ${useCustomTooltip ? 'translate-x-5' : 'translate-x-0'}`} />
                                     </button>
                                 </label>
+
+                                {/* Custom Tooltip Template */}
+                                {useCustomTooltip && (
+                                    <div className="space-y-2">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm text-slate-300">Template HTML</span>
+                                            <span className="text-xs text-slate-500">Dùng: {'{name}'}, {'{code}'}, {'{value}'}</span>
+                                        </div>
+                                        <textarea
+                                            value={tooltipTemplate}
+                                            onChange={(e) => setTooltipTemplate(e.target.value)}
+                                            rows={6}
+                                            className="w-full bg-slate-800 border border-white/10 rounded-lg p-3 text-sm text-slate-300 font-mono resize-none focus:outline-none focus:ring-2 focus:ring-sky-500"
+                                            placeholder="Nhập HTML template..."
+                                        />
+                                        <button
+                                            onClick={() => setTooltipTemplate(DEFAULT_TOOLTIP)}
+                                            className="text-xs text-sky-400 hover:text-sky-300"
+                                        >
+                                            ↺ Reset về mặc định
+                                        </button>
+                                    </div>
+                                )}
 
                                 {/* Hover Color */}
                                 <div className="flex items-center justify-between">
@@ -217,9 +235,7 @@ export default function DemoPage() {
   showZoomControls={${showZoomControls}}
   hoverColor="${hoverColor}"${useCustomTooltip ? `
   tooltipFormatter={(point) => \`
-    <div>📍 \${point.name}</div>
-    <div>Value: \${point.value}</div>
-  \`}` : ''}
+    ${tooltipTemplate.replace(/\n/g, '\n    ').replace(/{/g, '${point.').replace(/}/g, '}')}\`}` : ''}
   onProvinceClick={(p) => console.log(p)}
 />`}
                             />
