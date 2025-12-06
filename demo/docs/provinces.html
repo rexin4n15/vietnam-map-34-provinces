@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>34 Provinces Data - Vietnam Map</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .provinces-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .province-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .province-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .province-card.active {
+            border-color: var(--primary);
+            background: rgba(14, 165, 233, 0.1);
+        }
+
+        .province-card.merged {
+            border-left: 3px solid var(--accent);
+        }
+
+        .province-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .province-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .province-code {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .province-stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .merged-from {
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-top: 0.5rem;
+        }
+
+        /* Communes Panel */
+        .communes-panel {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .communes-panel.active {
+            display: block;
+        }
+
+        .communes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .communes-header h3 {
+            font-size: 1.25rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+        }
+
+        .communes-search {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .communes-search:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .communes-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.5rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .commune-item {
+            padding: 0.5rem 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .commune-item code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--primary);
+        }
+
+        /* Filter */
+        .filter-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Stats */
+        .stats-bar {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(14, 165, 233, 0.1);
+            border-radius: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .legend-merged {
+            background: var(--accent);
+        }
+
+        .legend-unchanged {
+            background: var(--border);
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="nav-content">
+            <a href="../" class="logo">🇻🇳 Vietnam Map 34</a>
+            <div class="nav-links">
+                <a href="../">Demo</a>
+                <a href="vanilla.html">Vanilla JS</a>
+                <a href="reactjs.html">React</a>
+                <a href="vuejs.html">Vue</a>
+                <a href="angular.html">Angular</a>
+                <a href="provinces.html" class="active">34 Provinces</a>
+            </div>
+            <div class="nav-buttons">
+                <a href="https://github.com/xdev-asia-labs/vietnam-map-34-provinces" class="btn btn-outline"
+                    target="_blank">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="doc-header">
+            <span class="badge" style="background: var(--accent); color: white;">QĐ 19/2025</span>
+            <h1>34 Provinces Data</h1>
+            <p class="subtitle">Danh sách 34 tỉnh/thành phố và 3,321 xã/phường theo cấu trúc hành chính mới</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-bar" id="statsBar">
+            <!-- Filled by JS -->
+        </div>
+
+        <!-- Filter -->
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all">Tất cả (34)</button>
+            <button class="filter-btn" data-filter="city">Thành phố TW (6)</button>
+            <button class="filter-btn" data-filter="merged">Đã hợp nhất (27)</button>
+            <button class="filter-btn" data-filter="unchanged">Giữ nguyên (7)</button>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color legend-merged"></div>
+                <span>Tỉnh hợp nhất</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color legend-unchanged"></div>
+                <span>Giữ nguyên</span>
+            </div>
+        </div>
+
+        <!-- Communes Panel (hidden by default) -->
+        <div class="communes-panel" id="communesPanel">
+            <div class="communes-header">
+                <h3 id="communesTitle">Xã/Phường</h3>
+                <button class="close-btn" onclick="closeCommunesPanel()">×</button>
+            </div>
+            <input type="text" class="communes-search" id="communesSearch" placeholder="Tìm xã/phường...">
+            <div class="communes-list" id="communesList">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+
+        <!-- Provinces Grid -->
+        <div class="provinces-grid" id="provincesGrid">
+            <!-- Filled by JS -->
+        </div>
+    </div>
+
+    <footer>
+        <p>Made with ❤️ by <a href="https://github.com/xdev-asia-labs">xdev-asia-labs</a></p>
+        <p style="margin-top: 0.5rem;">Data source: <a href="https://github.com/phucanhle/vn-xaphuong-2025"
+                target="_blank">QĐ 19/2025/QĐ-TTg</a></p>
+    </footer>
+
+    <script>
+        // Province data from QĐ 19/2025
+        const PROVINCES = [
+            { code: "01", tms: "101", name: "Hà Nội", type: "city", communes: 126, merged: ["Hà Nội", "Hà Tây"] },
+            { code: "02", tms: "102", name: "Bắc Ninh", type: "province", communes: 99, merged: ["Bắc Ninh", "Bắc Giang"] },
+            { code: "03", tms: "103", name: "Quảng Ninh", type: "province", communes: 54, merged: [] },
+            { code: "04", tms: "104", name: "Hải Phòng", type: "city", communes: 114, merged: ["Hải Phòng", "Hải Dương"] },
+            { code: "05", tms: "105", name: "Hưng Yên", type: "province", communes: 104, merged: ["Hưng Yên", "Thái Bình"] },
+            { code: "06", tms: "106", name: "Ninh Bình", type: "province", communes: 129, merged: ["Ninh Bình", "Nam Định", "Hà Nam"] },
+            { code: "07", tms: "107", name: "Cao Bằng", type: "province", communes: 56, merged: [] },
+            { code: "08", tms: "108", name: "Tuyên Quang", type: "province", communes: 124, merged: ["Tuyên Quang", "Hà Giang"] },
+            { code: "09", tms: "109", name: "Lào Cai", type: "province", communes: 99, merged: ["Lào Cai", "Yên Bái"] },
+            { code: "10", tms: "110", name: "Thái Nguyên", type: "province", communes: 92, merged: ["Thái Nguyên", "Bắc Kạn"] },
+            { code: "11", tms: "111", name: "Lạng Sơn", type: "province", communes: 65, merged: [] },
+            { code: "12", tms: "112", name: "Phú Thọ", type: "province", communes: 148, merged: ["Phú Thọ", "Vĩnh Phúc", "Hòa Bình"] },
+            { code: "13", tms: "113", name: "Điện Biên", type: "province", communes: 45, merged: [] },
+            { code: "14", tms: "114", name: "Lai Châu", type: "province", communes: 38, merged: [] },
+            { code: "15", tms: "115", name: "Sơn La", type: "province", communes: 75, merged: [] },
+            { code: "16", tms: "116", name: "Thanh Hóa", type: "province", communes: 166, merged: [] },
+            { code: "17", tms: "117", name: "Nghệ An", type: "province", communes: 130, merged: [] },
+            { code: "18", tms: "118", name: "Hà Tĩnh", type: "province", communes: 69, merged: [] },
+            { code: "19", tms: "119", name: "Quảng Trị", type: "province", communes: 78, merged: ["Quảng Trị", "Quảng Bình"] },
+            { code: "20", tms: "120", name: "Huế", type: "city", communes: 40, merged: ["Thừa Thiên Huế"] },
+            { code: "21", tms: "121", name: "Đà Nẵng", type: "city", communes: 94, merged: ["Đà Nẵng", "Quảng Nam"] },
+            { code: "22", tms: "122", name: "Quảng Ngãi", type: "province", communes: 96, merged: ["Quảng Ngãi", "Kon Tum"] },
+            { code: "23", tms: "123", name: "Khánh Hòa", type: "province", communes: 65, merged: ["Khánh Hòa", "Ninh Thuận"] },
+            { code: "24", tms: "124", name: "Gia Lai", type: "province", communes: 135, merged: ["Gia Lai", "Bình Định"] },
+            { code: "25", tms: "125", name: "Đắk Lắk", type: "province", communes: 102, merged: ["Đắk Lắk", "Phú Yên"] },
+            { code: "26", tms: "126", name: "Lâm Đồng", type: "province", communes: 124, merged: ["Lâm Đồng", "Đắk Nông", "Bình Thuận"] },
+            { code: "27", tms: "127", name: "Tây Ninh", type: "province", communes: 96, merged: ["Tây Ninh", "Long An"] },
+            { code: "28", tms: "128", name: "Đồng Nai", type: "province", communes: 95, merged: ["Đồng Nai", "Bình Phước"] },
+            { code: "29", tms: "129", name: "Hồ Chí Minh", type: "city", communes: 168, merged: ["Hồ Chí Minh", "Bình Dương", "Bà Rịa - Vũng Tàu"] },
+            { code: "30", tms: "130", name: "Vĩnh Long", type: "province", communes: 124, merged: ["Vĩnh Long", "Bến Tre", "Trà Vinh"] },
+            { code: "31", tms: "131", name: "Đồng Tháp", type: "province", communes: 102, merged: ["Đồng Tháp", "Tiền Giang"] },
+            { code: "32", tms: "132", name: "An Giang", type: "province", communes: 102, merged: ["An Giang", "Kiên Giang"] },
+            { code: "33", tms: "133", name: "Cần Thơ", type: "city", communes: 103, merged: ["Cần Thơ", "Hậu Giang", "Sóc Trăng"] },
+            { code: "34", tms: "134", name: "Cà Mau", type: "province", communes: 64, merged: ["Cà Mau", "Bạc Liêu"] }
+        ];
+
+        // Communes data will be loaded
+        let communesData = null;
+        let currentProvince = null;
+
+        // Load communes data
+        async function loadCommunesData() {
+            try {
+                const response = await fetch('https://raw.githubusercontent.com/xdev-asia-labs/vietnam-map-34-provinces/main/src/core/assets/communes-2025.json');
+                communesData = await response.json();
+            } catch (e) {
+                console.error('Failed to load communes data');
+            }
+        }
+
+        // Render stats
+        function renderStats() {
+            const total = PROVINCES.length;
+            const cities = PROVINCES.filter(p => p.type === 'city').length;
+            const merged = PROVINCES.filter(p => p.merged.length > 1).length;
+            const totalCommunes = PROVINCES.reduce((sum, p) => sum + p.communes, 0);
+
+            document.getElementById('statsBar').innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-value">${total}</div>
+                    <div class="stat-label">Tỉnh/TP</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${cities}</div>
+                    <div class="stat-label">TP Trực thuộc TW</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${merged}</div>
+                    <div class="stat-label">Đã hợp nhất</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${totalCommunes.toLocaleString()}</div>
+                    <div class="stat-label">Xã/Phường</div>
+                </div>
+            `;
+        }
+
+        // Render provinces grid
+        function renderProvinces(filter = 'all') {
+            const grid = document.getElementById('provincesGrid');
+            let filtered = PROVINCES;
+
+            if (filter === 'city') {
+                filtered = PROVINCES.filter(p => p.type === 'city');
+            } else if (filter === 'merged') {
+                filtered = PROVINCES.filter(p => p.merged.length > 1);
+            } else if (filter === 'unchanged') {
+                filtered = PROVINCES.filter(p => p.merged.length <= 1);
+            }
+
+            grid.innerHTML = filtered.map(p => `
+                <div class="province-card ${p.merged.length > 1 ? 'merged' : ''} ${currentProvince === p.code ? 'active' : ''}" 
+                     onclick="showCommunes('${p.code}')">
+                    <div class="province-header">
+                        <span class="province-name">${p.name}</span>
+                        <span class="province-code">BNV: ${p.code} | TMS: ${p.tms}</span>
+                    </div>
+                    <div class="province-stats">
+                        <span>📍 ${p.communes} xã/phường</span>
+                        <span>${p.type === 'city' ? '🏙️ TP TW' : '🏛️ Tỉnh'}</span>
+                    </div>
+                    ${p.merged.length > 1 ? `<div class="merged-from">Hợp nhất: ${p.merged.join(' + ')}</div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Show communes for a province
+        function showCommunes(code) {
+            if (!communesData) {
+                alert('Đang tải dữ liệu...');
+                return;
+            }
+
+            currentProvince = code;
+            const province = PROVINCES.find(p => p.code === code);
+            const data = communesData.find(p => p.matinhBNV === code);
+
+            if (!data) return;
+
+            document.getElementById('communesTitle').textContent = `${province.name} - ${data.phuongxa.length} xã/phường`;
+            renderCommunesList(data.phuongxa);
+
+            document.getElementById('communesPanel').classList.add('active');
+            document.getElementById('communesPanel').scrollIntoView({ behavior: 'smooth' });
+
+            renderProvinces(getCurrentFilter());
+        }
+
+        // Render communes list
+        function renderCommunesList(communes, filter = '') {
+            const list = document.getElementById('communesList');
+            const filtered = filter
+                ? communes.filter(c => c.tenphuongxa.toLowerCase().includes(filter.toLowerCase()))
+                : communes;
+
+            list.innerHTML = filtered.map(c => `
+                <div class="commune-item">
+                    <span>${c.tenphuongxa}</span>
+                    <code>${c.maphuongxa}</code>
+                </div>
+            `).join('');
+        }
+
+        // Close communes panel
+        function closeCommunesPanel() {
+            currentProvince = null;
+            document.getElementById('communesPanel').classList.remove('active');
+            renderProvinces(getCurrentFilter());
+        }
+
+        // Get current filter
+        function getCurrentFilter() {
+            const activeBtn = document.querySelector('.filter-btn.active');
+            return activeBtn ? activeBtn.dataset.filter : 'all';
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', async () => {
+            renderStats();
+            renderProvinces();
+            await loadCommunesData();
+
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderProvinces(btn.dataset.filter);
+                });
+            });
+
+            // Communes search
+            document.getElementById('communesSearch').addEventListener('input', (e) => {
+                if (!currentProvince || !communesData) return;
+                const data = communesData.find(p => p.matinhBNV === currentProvince);
+                if (data) {
+                    renderCommunesList(data.phuongxa, e.target.value);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
