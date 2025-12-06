@@ -1,5 +1,5 @@
 {
-    "name": "@xdev-asia-labs/vietnam-map-34-provinces",
+    "name": "@xdev-asia/vietnam-map-34-provinces",
     "version": "1.0.0",
     "description": "Vietnam Map with 34 new provinces (Nghị quyết 60-NQ/TW) - Framework-agnostic (vanilla JS, React, Vue, Angular)",
     "main": "dist/index.js",
