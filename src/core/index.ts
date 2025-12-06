@@ -15,7 +15,7 @@ export {
     isMergedProvince
 } from './provinceMapping';
 
-export type { Province, OldProvince } from './provinceMapping';
+export type { Province, Commune } from './provinceMapping';
 
 // Export GeoJSON map data
 import vnMapData from './assets/vn-all.geo.json';

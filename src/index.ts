@@ -30,7 +30,7 @@ export {
     vietnamGeoJson
 } from './core';
 
-export type { Province, OldProvince } from './core';
+export type { Province, Commune } from './core';
 
 // Vanilla JS exports
 export { createVietnamMap } from './vanilla';

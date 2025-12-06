@@ -1,562 +1,244 @@
 /**
  * 34 PROVINCES MAPPING CONFIGURATION
- * Theo Nghị quyết 60-NQ/TW của Ban Chấp hành Trung ương Đảng khóa XIII
- * Hiệu lực từ 01/07/2025 theo Quyết định 19/2025/QĐ-TTg
+ * Theo Quyết định 19/2025/QĐ-TTg (có hiệu lực từ 01/07/2025)
+ * Source: https://github.com/phucanhle/vn-xaphuong-2025
  * 
- * Mapping này bao gồm:
- * - 23 đơn vị hợp nhất (merged provinces)
- * - 11 đơn vị giữ nguyên (unchanged provinces)
+ * OFFICIAL DATA: 34 tỉnh/TP, 3,321 xã/phường
  * 
  * Cấu trúc mới: Tỉnh → Xã (bỏ cấp huyện)
- * 
- * UPDATED: Fixed per official NQ 60-NQ/TW sources
  */
 
 // === TYPES & INTERFACES ===
 
 export interface Province {
-    /** Mã tỉnh mới (unique ID) */
+    /** Mã tỉnh mới BNV (unique ID) */
     code: number;
+    /** Mã TMS (Tax Management System) */
+    tms_code: number;
     /** Tên tỉnh mới */
     name: string;
     /** Tên chuẩn hóa không dấu */
     codename: string;
     /** Loại: "tỉnh" hoặc "thành phố" */
     division_type: "tỉnh" | "thành phố";
-    /** Mã vùng điện thoại */
-    phone_code: number;
-    /** Danh sách các tỉnh cũ được hợp nhất */
-    merged_from: OldProvince[];
-    /** Trung tâm hành chính (có thể khác tên tỉnh) */
-    administrative_center?: string;
+    /** Số xã/phường */
+    commune_count: number;
+    /** Danh sách các tỉnh cũ được hợp nhất (nếu có) */
+    merged_from?: string[];
 }
 
-export interface OldProvince {
-    /** Tên tỉnh cũ (63 tỉnh) */
-    name: string;
-    /** Mã tỉnh cũ */
+export interface Commune {
+    /** Mã xã/phường */
     code: number;
-    /** Tên chuẩn hóa không dấu */
-    codename: string;
+    /** Tên xã/phường */
+    name: string;
 }
 
-// === 34 TỈNH MỚI (DATA STRUCTURE) ===
+// === 34 TỈNH MỚI (TỪ QĐ 19/2025) ===
 
 export const NEW_34_PROVINCES: Province[] = [
-    // === 11 ĐƠN VỊ GIỮ NGUYÊN ===
-    {
-        code: 1,
-        name: "Hà Nội",
-        codename: "ha_noi",
-        division_type: "thành phố",
-        phone_code: 24,
-        merged_from: [
-            { name: "Hà Nội", code: 1, codename: "ha_noi" },
-            { name: "Hà Tây", code: 29, codename: "ha_tay" }
-        ]
-    },
-    {
-        code: 2,
-        name: "Huế",
-        codename: "hue",
-        division_type: "thành phố",
-        phone_code: 234,
-        merged_from: [
-            { name: "Thừa Thiên Huế", code: 46, codename: "thua_thien_hue" }
-        ]
-    },
-    {
-        code: 3,
-        name: "Lai Châu",
-        codename: "lai_chau",
-        division_type: "tỉnh",
-        phone_code: 213,
-        merged_from: [
-            { name: "Lai Châu", code: 12, codename: "lai_chau" }
-        ]
-    },
-    {
-        code: 4,
-        name: "Điện Biên",
-        codename: "dien_bien",
-        division_type: "tỉnh",
-        phone_code: 215,
-        merged_from: [
-            { name: "Điện Biên", code: 11, codename: "dien_bien" }
-        ]
-    },
-    {
-        code: 5,
-        name: "Sơn La",
-        codename: "son_la",
-        division_type: "tỉnh",
-        phone_code: 212,
-        merged_from: [
-            { name: "Sơn La", code: 14, codename: "son_la" }
-        ]
-    },
-    {
-        code: 6,
-        name: "Lạng Sơn",
-        codename: "lang_son",
-        division_type: "tỉnh",
-        phone_code: 205,
-        merged_from: [
-            { name: "Lạng Sơn", code: 20, codename: "lang_son" }
-        ]
-    },
-    {
-        code: 7,
-        name: "Quảng Ninh",
-        codename: "quang_ninh",
-        division_type: "tỉnh",
-        phone_code: 203,
-        merged_from: [
-            { name: "Quảng Ninh", code: 22, codename: "quang_ninh" }
-        ]
-    },
-    {
-        code: 8,
-        name: "Thanh Hóa",
-        codename: "thanh_hoa",
-        division_type: "tỉnh",
-        phone_code: 237,
-        merged_from: [
-            { name: "Thanh Hóa", code: 38, codename: "thanh_hoa" }
-        ]
-    },
-    {
-        code: 9,
-        name: "Nghệ An",
-        codename: "nghe_an",
-        division_type: "tỉnh",
-        phone_code: 238,
-        merged_from: [
-            { name: "Nghệ An", code: 40, codename: "nghe_an" }
-        ]
-    },
-    {
-        code: 10,
-        name: "Hà Tĩnh",
-        codename: "ha_tinh",
-        division_type: "tỉnh",
-        phone_code: 239,
-        merged_from: [
-            { name: "Hà Tĩnh", code: 42, codename: "ha_tinh" }
-        ]
-    },
-    {
-        code: 11,
-        name: "Cao Bằng",
-        codename: "cao_bang",
-        division_type: "tỉnh",
-        phone_code: 206,
-        merged_from: [
-            { name: "Cao Bằng", code: 4, codename: "cao_bang" }
-        ]
-    },
-
-    // === 23 ĐƠN VỊ HỢP NHẤT ===
-    {
-        code: 12,
-        name: "Tuyên Quang",
-        codename: "tuyen_quang",
-        division_type: "tỉnh",
-        phone_code: 207,
-        merged_from: [
-            { name: "Tuyên Quang", code: 8, codename: "tuyen_quang" },
-            { name: "Hà Giang", code: 2, codename: "ha_giang" }
-        ],
-        administrative_center: "Tuyên Quang"
-    },
-    {
-        code: 13,
-        name: "Lào Cai",
-        codename: "lao_cai",
-        division_type: "tỉnh",
-        phone_code: 214,
-        merged_from: [
-            { name: "Lào Cai", code: 10, codename: "lao_cai" },
-            { name: "Yên Bái", code: 15, codename: "yen_bai" }
-        ],
-        administrative_center: "Yên Bái"
-    },
-    {
-        code: 14,
-        name: "Thái Nguyên",
-        codename: "thai_nguyen",
-        division_type: "tỉnh",
-        phone_code: 208,
-        merged_from: [
-            { name: "Bắc Kạn", code: 6, codename: "bac_kan" },
-            { name: "Thái Nguyên", code: 19, codename: "thai_nguyen" }
-        ],
-        administrative_center: "Thái Nguyên"
-    },
-    {
-        code: 15,
-        name: "Phú Thọ",
-        codename: "phu_tho",
-        division_type: "tỉnh",
-        phone_code: 210,
-        merged_from: [
-            { name: "Vĩnh Phúc", code: 26, codename: "vinh_phuc" },
-            { name: "Phú Thọ", code: 25, codename: "phu_tho" },
-            { name: "Hòa Bình", code: 17, codename: "hoa_binh" }
-        ],
-        administrative_center: "Phú Thọ"
-    },
-    {
-        code: 16,
-        name: "Bắc Ninh",
-        codename: "bac_ninh",
-        division_type: "tỉnh",
-        phone_code: 222,
-        merged_from: [
-            { name: "Bắc Ninh", code: 27, codename: "bac_ninh" },
-            { name: "Bắc Giang", code: 24, codename: "bac_giang" }
-        ],
-        administrative_center: "Bắc Giang"
-    },
-    {
-        code: 17,
-        name: "Hưng Yên",
-        codename: "hung_yen",
-        division_type: "tỉnh",
-        phone_code: 221,
-        merged_from: [
-            { name: "Hưng Yên", code: 33, codename: "hung_yen" },
-            { name: "Thái Bình", code: 34, codename: "thai_binh" }
-        ],
-        administrative_center: "Hưng Yên"
-    },
-    {
-        code: 18,
-        name: "Hải Phòng",
-        codename: "hai_phong",
-        division_type: "thành phố",
-        phone_code: 225,
-        merged_from: [
-            { name: "Hải Dương", code: 30, codename: "hai_duong" },
-            { name: "Hải Phòng", code: 31, codename: "hai_phong" }
-        ],
-        administrative_center: "Hải Phòng"
-    },
-    {
-        code: 19,
-        name: "Ninh Bình",
-        codename: "ninh_binh",
-        division_type: "tỉnh",
-        phone_code: 229,
-        merged_from: [
-            { name: "Hà Nam", code: 35, codename: "ha_nam" },
-            { name: "Ninh Bình", code: 37, codename: "ninh_binh" },
-            { name: "Nam Định", code: 36, codename: "nam_dinh" }
-        ],
-        administrative_center: "Ninh Bình"
-    },
-    {
-        code: 20,
-        name: "Quảng Trị",
-        codename: "quang_tri",
-        division_type: "tỉnh",
-        phone_code: 233,
-        merged_from: [
-            { name: "Quảng Bình", code: 44, codename: "quang_binh" },
-            { name: "Quảng Trị", code: 45, codename: "quang_tri" }
-        ],
-        administrative_center: "Quảng Bình"
-    },
-    {
-        code: 21,
-        name: "Đà Nẵng",
-        codename: "da_nang",
-        division_type: "thành phố",
-        phone_code: 236,
-        merged_from: [
-            { name: "Quảng Nam", code: 49, codename: "quang_nam" },
-            { name: "Đà Nẵng", code: 48, codename: "da_nang" }
-        ],
-        administrative_center: "Đà Nẵng"
-    },
-    {
-        code: 22,
-        name: "Quảng Ngãi",
-        codename: "quang_ngai",
-        division_type: "tỉnh",
-        phone_code: 255,
-        merged_from: [
-            { name: "Kon Tum", code: 62, codename: "kon_tum" },
-            { name: "Quảng Ngãi", code: 51, codename: "quang_ngai" }
-        ],
-        administrative_center: "Quảng Ngãi"
-    },
-    {
-        code: 23,
-        name: "Gia Lai",
-        codename: "gia_lai",
-        division_type: "tỉnh",
-        phone_code: 269,
-        merged_from: [
-            { name: "Gia Lai", code: 64, codename: "gia_lai" },
-            { name: "Bình Định", code: 52, codename: "binh_dinh" }
-        ],
-        administrative_center: "Bình Định"
-    },
-    {
-        code: 24,
-        name: "Khánh Hòa",
-        codename: "khanh_hoa",
-        division_type: "tỉnh",
-        phone_code: 258,
-        merged_from: [
-            { name: "Ninh Thuận", code: 58, codename: "ninh_thuan" },
-            { name: "Khánh Hòa", code: 56, codename: "khanh_hoa" }
-        ],
-        administrative_center: "Khánh Hòa"
-    },
-    {
-        code: 25,
-        name: "Lâm Đồng",
-        codename: "lam_dong",
-        division_type: "tỉnh",
-        phone_code: 263,
-        merged_from: [
-            { name: "Lâm Đồng", code: 68, codename: "lam_dong" },
-            { name: "Đắk Nông", code: 67, codename: "dak_nong" }
-        ],
-        administrative_center: "Lâm Đồng"
-    },
-    {
-        code: 26,
-        name: "Đắk Lắk",
-        codename: "dak_lak",
-        division_type: "tỉnh",
-        phone_code: 262,
-        merged_from: [
-            { name: "Đắk Lắk", code: 66, codename: "dak_lak" },
-            { name: "Phú Yên", code: 54, codename: "phu_yen" }
-        ],
-        administrative_center: "Đắk Lắk"
-    },
-    {
-        code: 27,
-        name: "Bình Thuận",
-        codename: "binh_thuan",
-        division_type: "tỉnh",
-        phone_code: 252,
-        merged_from: [
-            { name: "Bình Thuận", code: 60, codename: "binh_thuan" },
-            { name: "Bình Phước", code: 70, codename: "binh_phuoc" }
-        ],
-        administrative_center: "Bình Thuận"
-    },
-    {
-        code: 28,
-        name: "Hồ Chí Minh",
-        codename: "ho_chi_minh",
-        division_type: "thành phố",
-        phone_code: 28,
-        merged_from: [
-            { name: "Long An", code: 80, codename: "long_an" },
-            { name: "Hồ Chí Minh", code: 79, codename: "ho_chi_minh" }
-        ],
-        administrative_center: "Hồ Chí Minh"
-    },
-    {
-        code: 29,
-        name: "Đồng Nai",
-        codename: "dong_nai",
-        division_type: "tỉnh",
-        phone_code: 251,
-        merged_from: [
-            { name: "Đồng Nai", code: 75, codename: "dong_nai" },
-            { name: "Bà Rịa - Vũng Tàu", code: 77, codename: "ba_ria_vung_tau" },
-            { name: "Bình Dương", code: 74, codename: "binh_duong" }
-        ],
-        administrative_center: "Đồng Nai"
-    },
-    {
-        code: 30,
-        name: "Đồng Tháp",
-        codename: "dong_thap",
-        division_type: "tỉnh",
-        phone_code: 277,
-        merged_from: [
-            { name: "Tiền Giang", code: 82, codename: "tien_giang" },
-            { name: "Đồng Tháp", code: 87, codename: "dong_thap" }
-        ],
-        administrative_center: "Đồng Tháp"
-    },
-    {
-        code: 31,
-        name: "An Giang",
-        codename: "an_giang",
-        division_type: "tỉnh",
-        phone_code: 296,
-        merged_from: [
-            { name: "An Giang", code: 89, codename: "an_giang" },
-            { name: "Kiên Giang", code: 91, codename: "kien_giang" }
-        ],
-        administrative_center: "An Giang"
-    },
-    {
-        code: 32,
-        name: "Bạc Liêu",
-        codename: "bac_lieu",
-        division_type: "tỉnh",
-        phone_code: 291,
-        merged_from: [
-            { name: "Bạc Liêu", code: 95, codename: "bac_lieu" },
-            { name: "Sóc Trăng", code: 94, codename: "soc_trang" }
-        ],
-        administrative_center: "Bạc Liêu"
-    },
-    {
-        code: 33,
-        name: "Cà Mau",
-        codename: "ca_mau",
-        division_type: "tỉnh",
-        phone_code: 290,
-        merged_from: [
-            { name: "Cà Mau", code: 96, codename: "ca_mau" },
-            { name: "Bến Tre", code: 83, codename: "ben_tre" }
-        ],
-        administrative_center: "Cà Mau"
-    },
-    {
-        code: 34,
-        name: "Trà Vinh",
-        codename: "tra_vinh",
-        division_type: "tỉnh",
-        phone_code: 294,
-        merged_from: [
-            { name: "Trà Vinh", code: 84, codename: "tra_vinh" },
-            { name: "Vĩnh Long", code: 86, codename: "vinh_long" }
-        ],
-        administrative_center: "Trà Vinh"
-    },
-    {
-        code: 35,
-        name: "Cần Thơ",
-        codename: "can_tho",
-        division_type: "thành phố",
-        phone_code: 292,
-        merged_from: [
-            { name: "Cần Thơ", code: 92, codename: "can_tho" },
-            { name: "Hậu Giang", code: 93, codename: "hau_giang" }
-        ],
-        administrative_center: "Cần Thơ"
-    }
+    { code: 1, tms_code: 101, name: "Hà Nội", codename: "ha_noi", division_type: "thành phố", commune_count: 126, merged_from: ["Hà Nội", "Hà Tây"] },
+    { code: 2, tms_code: 102, name: "Bắc Ninh", codename: "bac_ninh", division_type: "tỉnh", commune_count: 99, merged_from: ["Bắc Ninh", "Bắc Giang"] },
+    { code: 3, tms_code: 103, name: "Quảng Ninh", codename: "quang_ninh", division_type: "tỉnh", commune_count: 54 },
+    { code: 4, tms_code: 104, name: "Hải Phòng", codename: "hai_phong", division_type: "thành phố", commune_count: 114, merged_from: ["Hải Phòng", "Hải Dương"] },
+    { code: 5, tms_code: 105, name: "Hưng Yên", codename: "hung_yen", division_type: "tỉnh", commune_count: 104, merged_from: ["Hưng Yên", "Thái Bình"] },
+    { code: 6, tms_code: 106, name: "Ninh Bình", codename: "ninh_binh", division_type: "tỉnh", commune_count: 129, merged_from: ["Ninh Bình", "Nam Định", "Hà Nam"] },
+    { code: 7, tms_code: 107, name: "Cao Bằng", codename: "cao_bang", division_type: "tỉnh", commune_count: 56 },
+    { code: 8, tms_code: 108, name: "Tuyên Quang", codename: "tuyen_quang", division_type: "tỉnh", commune_count: 124, merged_from: ["Tuyên Quang", "Hà Giang"] },
+    { code: 9, tms_code: 109, name: "Lào Cai", codename: "lao_cai", division_type: "tỉnh", commune_count: 99, merged_from: ["Lào Cai", "Yên Bái"] },
+    { code: 10, tms_code: 110, name: "Thái Nguyên", codename: "thai_nguyen", division_type: "tỉnh", commune_count: 92, merged_from: ["Thái Nguyên", "Bắc Kạn"] },
+    { code: 11, tms_code: 111, name: "Lạng Sơn", codename: "lang_son", division_type: "tỉnh", commune_count: 65 },
+    { code: 12, tms_code: 112, name: "Phú Thọ", codename: "phu_tho", division_type: "tỉnh", commune_count: 148, merged_from: ["Phú Thọ", "Vĩnh Phúc", "Hòa Bình"] },
+    { code: 13, tms_code: 113, name: "Điện Biên", codename: "dien_bien", division_type: "tỉnh", commune_count: 45 },
+    { code: 14, tms_code: 114, name: "Lai Châu", codename: "lai_chau", division_type: "tỉnh", commune_count: 38 },
+    { code: 15, tms_code: 115, name: "Sơn La", codename: "son_la", division_type: "tỉnh", commune_count: 75 },
+    { code: 16, tms_code: 116, name: "Thanh Hóa", codename: "thanh_hoa", division_type: "tỉnh", commune_count: 166 },
+    { code: 17, tms_code: 117, name: "Nghệ An", codename: "nghe_an", division_type: "tỉnh", commune_count: 130 },
+    { code: 18, tms_code: 118, name: "Hà Tĩnh", codename: "ha_tinh", division_type: "tỉnh", commune_count: 69 },
+    { code: 19, tms_code: 119, name: "Quảng Trị", codename: "quang_tri", division_type: "tỉnh", commune_count: 78, merged_from: ["Quảng Trị", "Quảng Bình"] },
+    { code: 20, tms_code: 120, name: "Huế", codename: "hue", division_type: "thành phố", commune_count: 40, merged_from: ["Thừa Thiên Huế"] },
+    { code: 21, tms_code: 121, name: "Đà Nẵng", codename: "da_nang", division_type: "thành phố", commune_count: 94, merged_from: ["Đà Nẵng", "Quảng Nam"] },
+    { code: 22, tms_code: 122, name: "Quảng Ngãi", codename: "quang_ngai", division_type: "tỉnh", commune_count: 96, merged_from: ["Quảng Ngãi", "Kon Tum"] },
+    { code: 23, tms_code: 123, name: "Khánh Hòa", codename: "khanh_hoa", division_type: "tỉnh", commune_count: 65, merged_from: ["Khánh Hòa", "Ninh Thuận"] },
+    { code: 24, tms_code: 124, name: "Gia Lai", codename: "gia_lai", division_type: "tỉnh", commune_count: 135, merged_from: ["Gia Lai", "Bình Định"] },
+    { code: 25, tms_code: 125, name: "Đắk Lắk", codename: "dak_lak", division_type: "tỉnh", commune_count: 102, merged_from: ["Đắk Lắk", "Phú Yên"] },
+    { code: 26, tms_code: 126, name: "Lâm Đồng", codename: "lam_dong", division_type: "tỉnh", commune_count: 124, merged_from: ["Lâm Đồng", "Đắk Nông", "Bình Thuận"] },
+    { code: 27, tms_code: 127, name: "Tây Ninh", codename: "tay_ninh", division_type: "tỉnh", commune_count: 96, merged_from: ["Tây Ninh", "Long An"] },
+    { code: 28, tms_code: 128, name: "Đồng Nai", codename: "dong_nai", division_type: "tỉnh", commune_count: 95, merged_from: ["Đồng Nai", "Bình Phước"] },
+    { code: 29, tms_code: 129, name: "Hồ Chí Minh", codename: "ho_chi_minh", division_type: "thành phố", commune_count: 168, merged_from: ["Hồ Chí Minh", "Bình Dương", "Bà Rịa - Vũng Tàu"] },
+    { code: 30, tms_code: 130, name: "Vĩnh Long", codename: "vinh_long", division_type: "tỉnh", commune_count: 124, merged_from: ["Vĩnh Long", "Bến Tre", "Trà Vinh"] },
+    { code: 31, tms_code: 131, name: "Đồng Tháp", codename: "dong_thap", division_type: "tỉnh", commune_count: 102, merged_from: ["Đồng Tháp", "Tiền Giang"] },
+    { code: 32, tms_code: 132, name: "An Giang", codename: "an_giang", division_type: "tỉnh", commune_count: 102, merged_from: ["An Giang", "Kiên Giang"] },
+    { code: 33, tms_code: 133, name: "Cần Thơ", codename: "can_tho", division_type: "thành phố", commune_count: 103, merged_from: ["Cần Thơ", "Hậu Giang", "Sóc Trăng"] },
+    { code: 34, tms_code: 134, name: "Cà Mau", codename: "ca_mau", division_type: "tỉnh", commune_count: 64, merged_from: ["Cà Mau", "Bạc Liêu"] }
 ];
 
 // === QUICK LOOKUP MAP (OLD -> NEW) ===
 
 /**
  * Map tên tỉnh cũ (chuẩn hóa) → tên tỉnh mới
- * Dùng cho việc tra cứu nhanh khi có dữ liệu từ API 63 tỉnh
+ * Dùng cho việc tra cứu nhanh khi có dữ liệu từ API 63 tỉnh cũ
  */
 export const OLD_TO_NEW_PROVINCE_MAP: Record<string, string> = {
-    // 11 đơn vị giữ nguyên
-    "ha noi": "Hà Nội",
-    "ha tay": "Hà Nội",
-    "thua thien hue": "Huế",
-    "thua thien - hue": "Huế",
-    "hue": "Huế",
-    "lai chau": "Lai Châu",
-    "dien bien": "Điện Biên",
-    "son la": "Sơn La",
+    // Giữ nguyên (7)
+    "cao bang": "Cao Bằng",
     "lang son": "Lạng Sơn",
     "quang ninh": "Quảng Ninh",
+    "dien bien": "Điện Biên",
+    "lai chau": "Lai Châu",
+    "son la": "Sơn La",
     "thanh hoa": "Thanh Hóa",
     "nghe an": "Nghệ An",
     "ha tinh": "Hà Tĩnh",
-    "cao bang": "Cao Bằng",
 
-    // 23 đơn vị hợp nhất
-    "tuyen quang": "Tuyên Quang",
-    "ha giang": "Tuyên Quang",
+    // Hà Nội (+ Hà Tây cũ)
+    "ha noi": "Hà Nội",
+    "ha tay": "Hà Nội",
 
-    "lao cai": "Lào Cai",
-    "yen bai": "Lào Cai",
-
-    "bac kan": "Thái Nguyên",
-    "bac can": "Thái Nguyên",
-    "thai nguyen": "Thái Nguyên",
-
-    "vinh phuc": "Phú Thọ",
-    "phu tho": "Phú Thọ",
-    "hoa binh": "Phú Thọ",
-
+    // Bắc Ninh (+ Bắc Giang)
     "bac ninh": "Bắc Ninh",
     "bac giang": "Bắc Ninh",
 
+    // Hải Phòng (+ Hải Dương)
+    "hai phong": "Hải Phòng",
+    "hai duong": "Hải Phòng",
+
+    // Hưng Yên (+ Thái Bình)
     "hung yen": "Hưng Yên",
     "thai binh": "Hưng Yên",
 
-    "hai duong": "Hải Phòng",
-    "hai phong": "Hải Phòng",
-
-    "ha nam": "Ninh Bình",
+    // Ninh Bình (+ Nam Định + Hà Nam)
     "ninh binh": "Ninh Bình",
     "nam dinh": "Ninh Bình",
+    "ha nam": "Ninh Bình",
 
-    "quang binh": "Quảng Trị",
+    // Tuyên Quang (+ Hà Giang)
+    "tuyen quang": "Tuyên Quang",
+    "ha giang": "Tuyên Quang",
+
+    // Lào Cai (+ Yên Bái)
+    "lao cai": "Lào Cai",
+    "yen bai": "Lào Cai",
+
+    // Thái Nguyên (+ Bắc Kạn)
+    "thai nguyen": "Thái Nguyên",
+    "bac kan": "Thái Nguyên",
+    "bac can": "Thái Nguyên",
+
+    // Phú Thọ (+ Vĩnh Phúc + Hòa Bình)
+    "phu tho": "Phú Thọ",
+    "vinh phuc": "Phú Thọ",
+    "hoa binh": "Phú Thọ",
+
+    // Quảng Trị (+ Quảng Bình)
     "quang tri": "Quảng Trị",
+    "quang binh": "Quảng Trị",
 
-    "quang nam": "Đà Nẵng",
+    // Huế (Thừa Thiên Huế)
+    "hue": "Huế",
+    "thua thien hue": "Huế",
+    "thua thien - hue": "Huế",
+
+    // Đà Nẵng (+ Quảng Nam)
     "da nang": "Đà Nẵng",
+    "quang nam": "Đà Nẵng",
 
-    "kon tum": "Quảng Ngãi",
+    // Quảng Ngãi (+ Kon Tum)
     "quang ngai": "Quảng Ngãi",
+    "kon tum": "Quảng Ngãi",
 
+    // Khánh Hòa (+ Ninh Thuận)
+    "khanh hoa": "Khánh Hòa",
+    "ninh thuan": "Khánh Hòa",
+
+    // Gia Lai (+ Bình Định)
     "gia lai": "Gia Lai",
     "binh dinh": "Gia Lai",
 
-    "ninh thuan": "Khánh Hòa",
-    "khanh hoa": "Khánh Hòa",
-
-    "lam dong": "Lâm Đồng",
-    "dak nong": "Lâm Đồng",
-
+    // Đắk Lắk (+ Phú Yên)
     "dak lak": "Đắk Lắk",
     "phu yen": "Đắk Lắk",
 
-    // FIXED: Bình Thuận + Bình Phước
-    "binh thuan": "Bình Thuận",
-    "binh phuoc": "Bình Thuận",
+    // Lâm Đồng (+ Đắk Nông + Bình Thuận)
+    "lam dong": "Lâm Đồng",
+    "dak nong": "Lâm Đồng",
+    "binh thuan": "Lâm Đồng",
 
-    // FIXED: HCM = Long An + HCM
-    "long an": "Hồ Chí Minh",
-    "ho chi minh city": "Hồ Chí Minh",
-    "ho chi minh": "Hồ Chí Minh",
+    // Tây Ninh (+ Long An)
+    "tay ninh": "Tây Ninh",
+    "long an": "Tây Ninh",
 
-    // FIXED: Đồng Nai = Đồng Nai + BRVT + Bình Dương
+    // Đồng Nai (+ Bình Phước)
     "dong nai": "Đồng Nai",
-    "ba ria - vung tau": "Đồng Nai",
-    "ba ria vung tau": "Đồng Nai",
-    "binh duong": "Đồng Nai",
+    "binh phuoc": "Đồng Nai",
 
-    "tien giang": "Đồng Tháp",
+    // HCM (+ Bình Dương + Bà Rịa-VT)
+    "ho chi minh": "Hồ Chí Minh",
+    "ho chi minh city": "Hồ Chí Minh",
+    "binh duong": "Hồ Chí Minh",
+    "ba ria - vung tau": "Hồ Chí Minh",
+    "ba ria vung tau": "Hồ Chí Minh",
+
+    // Vĩnh Long (+ Bến Tre + Trà Vinh)
+    "vinh long": "Vĩnh Long",
+    "ben tre": "Vĩnh Long",
+    "tra vinh": "Vĩnh Long",
+
+    // Đồng Tháp (+ Tiền Giang)
     "dong thap": "Đồng Tháp",
+    "tien giang": "Đồng Tháp",
 
+    // An Giang (+ Kiên Giang)
     "an giang": "An Giang",
     "kien giang": "An Giang",
 
-    // FIXED: Bạc Liêu = Bạc Liêu + Sóc Trăng
-    "bac lieu": "Bạc Liêu",
-    "soc trang": "Bạc Liêu",
-
-    // FIXED: Cà Mau = Cà Mau + Bến Tre
-    "ca mau": "Cà Mau",
-    "ben tre": "Cà Mau",
-
-    // FIXED: Trà Vinh = Trà Vinh + Vĩnh Long
-    "tra vinh": "Trà Vinh",
-    "vinh long": "Trà Vinh",
-
+    // Cần Thơ (+ Hậu Giang + Sóc Trăng)
     "can tho": "Cần Thơ",
-    "hau giang": "Cần Thơ"
+    "hau giang": "Cần Thơ",
+    "soc trang": "Cần Thơ",
+
+    // Cà Mau (+ Bạc Liêu)
+    "ca mau": "Cà Mau",
+    "bac lieu": "Cà Mau"
+};
+
+// === PROVINCE NAME LOOKUP BY TMS CODE ===
+
+export const TMS_CODE_TO_PROVINCE: Record<number, string> = {
+    101: "Hà Nội",
+    102: "Bắc Ninh",
+    103: "Quảng Ninh",
+    104: "Hải Phòng",
+    105: "Hưng Yên",
+    106: "Ninh Bình",
+    107: "Cao Bằng",
+    108: "Tuyên Quang",
+    109: "Lào Cai",
+    110: "Thái Nguyên",
+    111: "Lạng Sơn",
+    112: "Phú Thọ",
+    113: "Điện Biên",
+    114: "Lai Châu",
+    115: "Sơn La",
+    116: "Thanh Hóa",
+    117: "Nghệ An",
+    118: "Hà Tĩnh",
+    119: "Quảng Trị",
+    120: "Huế",
+    121: "Đà Nẵng",
+    122: "Quảng Ngãi",
+    123: "Khánh Hòa",
+    124: "Gia Lai",
+    125: "Đắk Lắk",
+    126: "Lâm Đồng",
+    127: "Tây Ninh",
+    128: "Đồng Nai",
+    129: "Hồ Chí Minh",
+    130: "Vĩnh Long",
+    131: "Đồng Tháp",
+    132: "An Giang",
+    133: "Cần Thơ",
+    134: "Cà Mau"
 };
 
 // === HELPER FUNCTIONS ===
@@ -586,14 +268,21 @@ export const getNewProvinceName = (oldProvinceName: string): string => {
 export const getProvinceByName = (name: string): Province | undefined => {
     const normalized = normalizeName(name);
     const newName = OLD_TO_NEW_PROVINCE_MAP[normalized];
-    return NEW_34_PROVINCES.find(p => p.name === newName);
+    return NEW_34_PROVINCES.find(p => p.name === newName || p.name === name);
 };
 
 /**
- * Lấy tỉnh mới theo mã
+ * Lấy tỉnh mới theo mã BNV
  */
 export const getProvinceByCode = (code: number): Province | undefined => {
     return NEW_34_PROVINCES.find(p => p.code === code);
+};
+
+/**
+ * Lấy tỉnh mới theo mã TMS (thuế)
+ */
+export const getProvinceByTmsCode = (tmsCode: number): Province | undefined => {
+    return NEW_34_PROVINCES.find(p => p.tms_code === tmsCode);
 };
 
 /**
@@ -601,7 +290,37 @@ export const getProvinceByCode = (code: number): Province | undefined => {
  */
 export const isMergedProvince = (provinceName: string): boolean => {
     const province = getProvinceByName(provinceName);
-    return province ? province.merged_from.length > 1 : false;
+    return province?.merged_from ? province.merged_from.length > 1 : false;
+};
+
+/**
+ * Lấy tổng số xã/phường
+ */
+export const getTotalCommunes = (): number => {
+    return NEW_34_PROVINCES.reduce((sum, p) => sum + p.commune_count, 0);
+};
+
+/**
+ * Thống kê
+ */
+export const getProvinceStats = () => {
+    const total = NEW_34_PROVINCES.length;
+    const cities = NEW_34_PROVINCES.filter(p => p.division_type === "thành phố").length;
+    const merged = NEW_34_PROVINCES.filter(p => p.merged_from && p.merged_from.length > 1).length;
+    const communes = getTotalCommunes();
+    const largest = NEW_34_PROVINCES.reduce((max, p) => p.commune_count > max.commune_count ? p : max);
+    const smallest = NEW_34_PROVINCES.reduce((min, p) => p.commune_count < min.commune_count ? p : min);
+
+    return {
+        totalProvinces: total,
+        cities,
+        provinces: total - cities,
+        mergedProvinces: merged,
+        unchangedProvinces: total - merged,
+        totalCommunes: communes,
+        largestProvince: { name: largest.name, commune_count: largest.commune_count },
+        smallestProvince: { name: smallest.name, commune_count: smallest.commune_count }
+    };
 };
 
 // === DEPRECATED (backward compatibility) ===
