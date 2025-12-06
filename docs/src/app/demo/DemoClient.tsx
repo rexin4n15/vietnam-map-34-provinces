@@ -12,17 +12,17 @@ const VietnamMap = dynamic(
 
 export default function DemoPage() {
     const [selected, setSelected] = useState<any>(null);
-    const [loading, setLoading] = useState(false);
-    // Add ref for the details section
     const detailsRef = useRef<HTMLDivElement>(null);
+
+    // Map options state
+    const [showLabels, setShowLabels] = useState(true);
+    const [showZoomControls, setShowZoomControls] = useState(true);
+    const [mapHeight, setMapHeight] = useState(600);
 
     const handleProvinceClick = useCallback((province: any) => {
         setSelected(province);
-        // Scroll to details section on mobile or if needed
         if (detailsRef.current) {
             detailsRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-            // Add a temporary highlight effect (optional, simple logic here)
             detailsRef.current.classList.add('ring-2', 'ring-sky-500');
             setTimeout(() => {
                 detailsRef.current?.classList.remove('ring-2', 'ring-sky-500');
@@ -49,7 +49,9 @@ export default function DemoPage() {
                     {/* Map Container */}
                     <div className="lg:col-span-2 bg-slate-900/50 border border-white/10 rounded-2xl p-2 backdrop-blur-sm shadow-2xl relative">
                         <VietnamMap
-                            height={600}
+                            height={mapHeight}
+                            showLabels={showLabels}
+                            showZoomControls={showZoomControls}
                             onProvinceClick={handleProvinceClick}
                             colorAxis={{
                                 minColor: "#1e293b",
@@ -67,8 +69,65 @@ export default function DemoPage() {
                         </div>
                     </div>
 
-                    {/* Info Panel */}
+                    {/* Sidebar */}
                     <div className="space-y-6" ref={detailsRef}>
+                        {/* Options Panel */}
+                        <div className="bg-slate-900/50 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+                            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                                <span className="w-2 h-6 bg-amber-500 rounded-full"></span>
+                                Tùy chọn bản đồ
+                            </h3>
+
+                            <div className="space-y-4">
+                                {/* Show Labels Toggle */}
+                                <label className="flex items-center justify-between cursor-pointer group">
+                                    <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
+                                        Hiển thị tên tỉnh
+                                    </span>
+                                    <button
+                                        onClick={() => setShowLabels(!showLabels)}
+                                        className={`relative w-11 h-6 rounded-full transition-colors ${showLabels ? 'bg-sky-500' : 'bg-slate-600'
+                                            }`}
+                                    >
+                                        <span className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow ${showLabels ? 'translate-x-5' : 'translate-x-0'
+                                            }`} />
+                                    </button>
+                                </label>
+
+                                {/* Show Zoom Controls Toggle */}
+                                <label className="flex items-center justify-between cursor-pointer group">
+                                    <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
+                                        Nút zoom (+/-)
+                                    </span>
+                                    <button
+                                        onClick={() => setShowZoomControls(!showZoomControls)}
+                                        className={`relative w-11 h-6 rounded-full transition-colors ${showZoomControls ? 'bg-sky-500' : 'bg-slate-600'
+                                            }`}
+                                    >
+                                        <span className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow ${showZoomControls ? 'translate-x-5' : 'translate-x-0'
+                                            }`} />
+                                    </button>
+                                </label>
+
+                                {/* Height Slider */}
+                                <div className="space-y-2">
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-slate-300">Chiều cao</span>
+                                        <span className="text-sky-400 font-mono">{mapHeight}px</span>
+                                    </div>
+                                    <input
+                                        type="range"
+                                        min="400"
+                                        max="800"
+                                        step="50"
+                                        value={mapHeight}
+                                        onChange={(e) => setMapHeight(Number(e.target.value))}
+                                        className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-sky-500"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
                         {/* Selected Info */}
                         <div className="bg-slate-900/50 border border-white/10 rounded-2xl p-6 backdrop-blur-sm transition-all duration-300">
                             <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
@@ -110,13 +169,13 @@ export default function DemoPage() {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="h-40 flex flex-col items-center justify-center text-slate-500 border-2 border-dashed border-white/5 rounded-xl">
+                                <div className="h-32 flex flex-col items-center justify-center text-slate-500 border-2 border-dashed border-white/5 rounded-xl">
                                     <span>👆 Click vào bản đồ để xem chi tiết</span>
                                 </div>
                             )}
                         </div>
 
-                        {/* Config Preview */}
+                        {/* Code Preview */}
                         <div className="bg-slate-900/50 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-sm">
                             <div className="px-4 py-3 border-b border-white/5 bg-white/5 font-mono text-xs text-slate-500 flex justify-between items-center">
                                 <span>React Component Usage</span>
@@ -125,19 +184,15 @@ export default function DemoPage() {
                             <CodeBlock
                                 language="tsx"
                                 code={`<VietnamMap
-  height={600}
+  height={${mapHeight}}
+  showLabels={${showLabels}}
+  showZoomControls={${showZoomControls}}
   onProvinceClick={(p) => {
-    setSelected(p);
+    console.log(p.name);
   }}
   colorAxis={{
     minColor: "#1e293b",
     maxColor: "#0ea5e9" 
-  }}
-  drilldown={{
-    activeDataLabelStyle: {
-        textDecoration: 'none',
-        color: '#fff'
-    }
   }}
 />`}
                             />
