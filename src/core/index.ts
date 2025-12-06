@@ -21,3 +21,17 @@ export type { Province, OldProvince } from './provinceMapping';
 import vnMapData from './assets/vn-all.geo.json';
 export { vnMapData };
 export const vietnamGeoJson = vnMapData;
+
+// Export drilldown utilities (commune/ward level)
+export {
+    getProvincesIndex,
+    getProvinceInfo,
+    loadProvinceCommunes,
+    getProvinceStats
+} from './drilldown';
+
+export type {
+    ProvinceIndex,
+    CommuneFeature,
+    ProvinceGeoJSON
+} from './drilldown';

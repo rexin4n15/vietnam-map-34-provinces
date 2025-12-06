@@ -208,8 +208,8 @@ MIT
 
 ## 📖 References
 
-- [Nghị quyết 60-NQ/TW](https://example.com)
-- [Quyết định 19/2025/QĐ-TTg](https://example.com)
+- [Nghị quyết 60-NQ/TW - Trung ương Đảng khóa XIII](https://tulieuvankien.dangcongsan.vn/he-thong-van-ban/van-ban-cua-dang/nghi-quyet-so-60-nqtw-ngay-28112024-cua-bo-chinh-tri-ve-sap-xep-don-vi-hanh-chinh-cap-huyen-cap-xa-giai-doan-2026---2030-9797)
+- [GADM Vietnam Administrative Boundaries](https://gadm.org/download_country.html)
 - [Highcharts Maps](https://www.highcharts.com/docs/maps/getting-started)
 
 ## 🤝 Contributing
