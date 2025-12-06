@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/xdev-asia-labs/vietnam-map-34-provinces/compare/v1.1.1...v2.0.0) (2025-12-06)
+
+
+### Features
+
+* add support for React 18 and React 19 ([a926287](https://github.com/xdev-asia-labs/vietnam-map-34-provinces/commit/a9262873166f49727c05580bf86dbe2db051661e))
+
+
+### BREAKING CHANGES
+
+* Update peerDependencies to support both React 18.x and 19.x. Library now requires React ^18.0.0 || ^19.0.0.
+
 ## [1.1.1](https://github.com/xdev-asia-labs/vietnam-map-34-provinces/compare/v1.1.0...v1.1.1) (2025-12-06)
 
 
