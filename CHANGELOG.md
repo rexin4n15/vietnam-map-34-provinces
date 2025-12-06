@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/xdev-asia-labs/vietnam-map-34-provinces/compare/v2.0.0...v2.1.0) (2025-12-06)
+
+
+### Features
+
+* add manual workflow dispatch for release with version selection ([74e23ca](https://github.com/xdev-asia-labs/vietnam-map-34-provinces/commit/74e23ca206a370f4864be1dc2f2b7c619e15f617))
+
 # [2.0.0](https://github.com/xdev-asia-labs/vietnam-map-34-provinces/compare/v1.1.1...v2.0.0) (2025-12-06)
 
 
