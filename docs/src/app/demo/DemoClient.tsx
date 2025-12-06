@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import { useState, useRef, useCallback } from "react";
 import { CodeBlock } from "@/components/CodeBlock";
 
-// Import dynamically to avoid SSR issues with Highcharts
 const VietnamMap = dynamic(
     () => import("@xdev-asia/vietnam-map-34-provinces/react").then((mod) => mod.VietnamMap),
     { ssr: false, loading: () => <div className="h-[600px] bg-slate-900 animate-pulse rounded-xl" /> }
@@ -14,10 +13,12 @@ export default function DemoPage() {
     const [selected, setSelected] = useState<any>(null);
     const detailsRef = useRef<HTMLDivElement>(null);
 
-    // Map options state
+    // Map options
     const [showLabels, setShowLabels] = useState(true);
     const [showZoomControls, setShowZoomControls] = useState(true);
     const [mapHeight, setMapHeight] = useState(600);
+    const [hoverColor, setHoverColor] = useState("#fbbf24");
+    const [useCustomTooltip, setUseCustomTooltip] = useState(false);
 
     const handleProvinceClick = useCallback((province: any) => {
         setSelected(province);
@@ -28,6 +29,23 @@ export default function DemoPage() {
                 detailsRef.current?.classList.remove('ring-2', 'ring-sky-500');
             }, 1000);
         }
+    }, []);
+
+    // Custom tooltip formatter
+    const tooltipFormatter = useCallback((point: any) => {
+        return `
+            <div style="padding: 8px;">
+                <div style="font-size: 16px; font-weight: bold; color: #0f172a; margin-bottom: 8px;">
+                    📍 ${point.name}
+                </div>
+                <div style="color: #64748b; font-size: 12px;">
+                    Mã: <span style="color: #0ea5e9; font-weight: 600;">${point.code?.replace("vn-new-", "").toUpperCase()}</span>
+                </div>
+                <div style="color: #64748b; font-size: 12px; margin-top: 4px;">
+                    Giá trị: <span style="color: #10b981; font-weight: 600;">${point.value?.toLocaleString() || 'N/A'}</span>
+                </div>
+            </div>
+        `;
     }, []);
 
     return (
@@ -52,6 +70,8 @@ export default function DemoPage() {
                             height={mapHeight}
                             showLabels={showLabels}
                             showZoomControls={showZoomControls}
+                            hoverColor={hoverColor}
+                            tooltipFormatter={useCustomTooltip ? tooltipFormatter : undefined}
                             onProvinceClick={handleProvinceClick}
                             colorAxis={{
                                 minColor: "#1e293b",
@@ -62,7 +82,7 @@ export default function DemoPage() {
                         <div className="absolute top-4 right-4 bg-slate-900/90 backdrop-blur border border-white/10 rounded-lg p-3 text-xs text-slate-400 max-w-[200px]">
                             <p className="mb-1 font-semibold text-white">Hướng dẫn:</p>
                             <ul className="list-disc pl-4 space-y-1">
-                                <li>Click vào tỉnh để xem chi tiết (Drilldown)</li>
+                                <li>Click vào tỉnh để xem chi tiết</li>
                                 <li>Sử dụng nút "◁ Back" để quay lại</li>
                                 <li>Lăn chuột để Zoom</li>
                             </ul>
@@ -79,35 +99,59 @@ export default function DemoPage() {
                             </h3>
 
                             <div className="space-y-4">
-                                {/* Show Labels Toggle */}
+                                {/* Show Labels */}
                                 <label className="flex items-center justify-between cursor-pointer group">
                                     <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
                                         Hiển thị tên tỉnh
                                     </span>
                                     <button
                                         onClick={() => setShowLabels(!showLabels)}
-                                        className={`relative w-11 h-6 rounded-full transition-colors ${showLabels ? 'bg-sky-500' : 'bg-slate-600'
-                                            }`}
+                                        className={`relative w-11 h-6 rounded-full transition-colors ${showLabels ? 'bg-sky-500' : 'bg-slate-600'}`}
                                     >
-                                        <span className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow ${showLabels ? 'translate-x-5' : 'translate-x-0'
-                                            }`} />
+                                        <span className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow ${showLabels ? 'translate-x-5' : 'translate-x-0'}`} />
                                     </button>
                                 </label>
 
-                                {/* Show Zoom Controls Toggle */}
+                                {/* Show Zoom */}
                                 <label className="flex items-center justify-between cursor-pointer group">
                                     <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
                                         Nút zoom (+/-)
                                     </span>
                                     <button
                                         onClick={() => setShowZoomControls(!showZoomControls)}
-                                        className={`relative w-11 h-6 rounded-full transition-colors ${showZoomControls ? 'bg-sky-500' : 'bg-slate-600'
-                                            }`}
+                                        className={`relative w-11 h-6 rounded-full transition-colors ${showZoomControls ? 'bg-sky-500' : 'bg-slate-600'}`}
                                     >
-                                        <span className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow ${showZoomControls ? 'translate-x-5' : 'translate-x-0'
-                                            }`} />
+                                        <span className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow ${showZoomControls ? 'translate-x-5' : 'translate-x-0'}`} />
                                     </button>
                                 </label>
+
+                                {/* Custom Tooltip */}
+                                <label className="flex items-center justify-between cursor-pointer group">
+                                    <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
+                                        Custom tooltip
+                                    </span>
+                                    <button
+                                        onClick={() => setUseCustomTooltip(!useCustomTooltip)}
+                                        className={`relative w-11 h-6 rounded-full transition-colors ${useCustomTooltip ? 'bg-sky-500' : 'bg-slate-600'}`}
+                                    >
+                                        <span className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow ${useCustomTooltip ? 'translate-x-5' : 'translate-x-0'}`} />
+                                    </button>
+                                </label>
+
+                                {/* Hover Color */}
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm text-slate-300">Màu hover</span>
+                                    <div className="flex gap-2">
+                                        {['#fbbf24', '#0ea5e9', '#10b981', '#f43f5e', '#8b5cf6'].map((color) => (
+                                            <button
+                                                key={color}
+                                                onClick={() => setHoverColor(color)}
+                                                className={`w-6 h-6 rounded-full border-2 transition-transform ${hoverColor === color ? 'border-white scale-110' : 'border-transparent'}`}
+                                                style={{ backgroundColor: color }}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
 
                                 {/* Height Slider */}
                                 <div className="space-y-2">
@@ -141,36 +185,20 @@ export default function DemoPage() {
                                         <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">Tên đơn vị</div>
                                         <div className="text-2xl font-bold text-white">{selected.name}</div>
                                     </div>
-
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">Mã BNV</div>
-                                            <div className="font-mono text-sky-400">{selected["hc-key"]?.replace("vn-new-", "").replace("vn-", "") || selected.code || "N/A"}</div>
+                                            <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">Mã</div>
+                                            <div className="font-mono text-sky-400">{selected.code?.replace("vn-new-", "").toUpperCase() || "N/A"}</div>
                                         </div>
                                         <div>
                                             <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">Giá trị</div>
                                             <div className="font-mono text-emerald-400">{selected.value ?? "N/A"}</div>
                                         </div>
                                     </div>
-
-                                    {selected.level && (
-                                        <div>
-                                            <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">Cấp hành chính</div>
-                                            <div className="px-2 py-1 rounded bg-white/10 text-sm inline-block">
-                                                {selected.level}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    <div className="pt-4 border-t border-white/10">
-                                        <div className="text-xs text-slate-500 italic">
-                                            Dữ liệu được cập nhật theo Nghị quyết mới nhất về sắp xếp đơn vị hành chính.
-                                        </div>
-                                    </div>
                                 </div>
                             ) : (
-                                <div className="h-32 flex flex-col items-center justify-center text-slate-500 border-2 border-dashed border-white/5 rounded-xl">
-                                    <span>👆 Click vào bản đồ để xem chi tiết</span>
+                                <div className="h-24 flex flex-col items-center justify-center text-slate-500 border-2 border-dashed border-white/5 rounded-xl">
+                                    <span>👆 Click vào bản đồ</span>
                                 </div>
                             )}
                         </div>
@@ -178,7 +206,7 @@ export default function DemoPage() {
                         {/* Code Preview */}
                         <div className="bg-slate-900/50 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-sm">
                             <div className="px-4 py-3 border-b border-white/5 bg-white/5 font-mono text-xs text-slate-500 flex justify-between items-center">
-                                <span>React Component Usage</span>
+                                <span>React Usage</span>
                                 <span className="w-2 h-2 rounded-full bg-green-500"></span>
                             </div>
                             <CodeBlock
@@ -187,13 +215,12 @@ export default function DemoPage() {
   height={${mapHeight}}
   showLabels={${showLabels}}
   showZoomControls={${showZoomControls}}
-  onProvinceClick={(p) => {
-    console.log(p.name);
-  }}
-  colorAxis={{
-    minColor: "#1e293b",
-    maxColor: "#0ea5e9" 
-  }}
+  hoverColor="${hoverColor}"${useCustomTooltip ? `
+  tooltipFormatter={(point) => \`
+    <div>📍 \${point.name}</div>
+    <div>Value: \${point.value}</div>
+  \`}` : ''}
+  onProvinceClick={(p) => console.log(p)}
 />`}
                             />
                         </div>
