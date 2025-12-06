@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@xdev-asia/vietnam-map-34-provinces": "file:../",
     "highcharts": "^12.4.0",
     "highcharts-react-official": "^3.2.3",
     "next": "16.0.7",
